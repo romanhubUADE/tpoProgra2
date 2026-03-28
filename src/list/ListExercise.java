@@ -120,13 +120,61 @@ public class ListExercise extends Exercise {
 
     private void removeByIndexLogic(){
         System.out.print("Enter index to remove: ");
+        list.remove(scanner.nextInt());
+        scanner.nextLine();
+        printList();
+
+        boolean validInput=false;
+        while(!validInput){
+            System.out.println("\nQuere borrar otro?????? y/n");
+            String userInput=scanner.nextLine().toLowerCase();
+            switch (userInput){
+                case "y":
+                    validInput=true;
+                    break;
+                case "n":
+                    validInput=true;
+                    currentPhase=0;
+                    break;
+                default:
+            }
+
+        }
+
+
+
+
 
     }
     private void removeByReferenceLogic(){
+        // preguntar al profe si esta bien que borre solo un dato o todos
         System.out.print("Enter element to remove: ");
+        String referencia = scanner.nextLine();
+        list.remove(referencia);
+        printList();
+
+        boolean validInput=false;
+        while(!validInput){
+            System.out.println("\n Quere borrar otro por refe? y/n");
+            String userInput=scanner.nextLine().toLowerCase();
+            switch (userInput){
+                case "y":
+                    validInput=true;
+                    break;
+                case "n":
+                    validInput=true;
+                    currentPhase=0;
+                    break;
+                default:
+            }
+
+        }
 
     }
     private void clearLogic(){
+        list.clear();
+        currentPhase = 0;
+
 
     }
 }
