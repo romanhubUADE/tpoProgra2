@@ -3,16 +3,20 @@ package list;
 import application.Exercise;
 
 import java.util.*;
+import list.SimpleList;
+import list.SimpleArrayList;
 
 public class ListExercise extends Exercise {
 
     private int currentPhase = 0;
     private boolean firstTime = true;
-    private List<String> list;
+    //private List<String> list;
+    private SimpleList<String> list;
 
     public ListExercise(Scanner scnr){
         super(scnr);
-        list=new ArrayList<>();
+        list = new SimpleArrayList<>();
+//        list = new SimpleLinkedList<>(); o si no para probar la otra implementacion por nodo
     }
 
     @Override
