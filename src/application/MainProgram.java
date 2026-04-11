@@ -51,6 +51,7 @@ public class MainProgram {
                 break;
             case "4":
                 exercise = new QueueExercise(scanner);
+                break;
             default:
                 System.out.println("Invalid input, try again.");
                 selectExercise(scanner);
