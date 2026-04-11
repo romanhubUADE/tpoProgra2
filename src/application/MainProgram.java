@@ -1,5 +1,7 @@
 package application;
 import list.ListExercise;
+import queueModule.QueueExercise;
+import stackModule.StackExercise;
 
 import java.util.*;
 
@@ -24,10 +26,12 @@ public class MainProgram {
     }
 
     private void selectExercise(Scanner scanner){
-        System.out.println("Select an option: "+
-                "\n  0 - Terminate Program"+
-                "\n  1 - Test Exercise"+
-                "\n  2 - List Exercise");
+        System.out.println("Select an option: " +
+                "\n  0 - Terminate Program" +
+                "\n  1 - Test Exercise" +
+                "\n  2 - List Exercise" +
+                "\n  3 - Stack Exercise" +
+                "\n  4 - Queue Exercise");
 
         String userInput= scanner.nextLine();
 
@@ -42,6 +46,11 @@ public class MainProgram {
             case "2":
                 exercise=new ListExercise(scanner);
                 break;
+            case "3":
+                exercise = new StackExercise(scanner);
+                break;
+            case "4":
+                exercise = new QueueExercise(scanner);
             default:
                 System.out.println("Invalid input, try again.");
                 selectExercise(scanner);
