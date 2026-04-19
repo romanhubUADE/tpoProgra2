@@ -1,0 +1,347 @@
+================================================================================
+  TP6 - SISTEMA DE ORGANIZACION DE CORREO ELECTRONICO
+  Documentacion tecnica y decisiones de diseno
+================================================================================
+
+--------------------------------------------------------------------------------
+1. QUE CONSTRUIMOS Y POR QUE
+--------------------------------------------------------------------------------
+
+El objetivo del TP es implementar el TDA PriorityQueue (Cola de Prioridad) desde
+cero y construir una aplicacion real encima de esa estructura.
+
+Elegimos el sistema de organizacion de e-mail. La idea central es que el usuario
+simula recibir correos, los ve ordenados por prioridad en una bandeja de entrada,
+y los clasifica en tres pestanas: Principal, Notificaciones y Spam.
+
+La clave del TP no es el sistema de mails en si, sino demostrar que el TDA
+PriorityQueue esta correctamente implementado y que puede usarse como base
+para resolver un problema real.
+
+
+--------------------------------------------------------------------------------
+2. COMO PENSAMOS EL DISENO (decisiones tomadas)
+--------------------------------------------------------------------------------
+
+DECISION 1 - Cuantas colas usar
+--------------------------------
+Optamos por 4 PriorityQueues independientes:
+  - Bandeja de entrada (inbox)
+  - Principal
+  - Notificaciones
+  - Spam
+
+La alternativa era una sola cola con filtrado. La descartamos porque no
+representa bien el dominio: cada pestana tiene su propio orden de prioridad
+independiente. Ademas, usar 4 colas demuestra mejor la reutilizacion del TDA.
+
+DECISION 2 - Flujo de clasificacion con bandeja de entrada
+-----------------------------------------------------------
+La consigna dice que el usuario completa 3 datos: asunto, pestana y prioridad.
+No especifica en que momento se completa cada dato.
+
+Diseñamos el flujo en dos etapas:
+  Etapa 1 (redactar): el usuario ingresa asunto y prioridad. El mail va a la
+  bandeja de entrada.
+  Etapa 2 (clasificar): desde la bandeja, el usuario ve los mails en orden de
+  prioridad y elige a que pestana mover el primero.
+
+Esto es mas realista (asi funciona Gmail) y refuerza el concepto del TDA:
+la bandeja ES una cola de prioridad que se procesa en orden.
+
+DECISION 3 - Implementacion del TDA: lista enlazada ordenada
+-------------------------------------------------------------
+Para implementar la PriorityQueue elegimos una lista enlazada que se mantiene
+ordenada en todo momento. La alternativa era un heap binario.
+
+Elegimos la lista enlazada porque:
+  - Es mas simple de implementar y de explicar
+  - Para 2 niveles de prioridad (ALTO/BAJO) no hay diferencia practica
+  - El algoritmo de insercion es facil de trazar en papel
+  - Es mas facil de defender en un parcial
+
+Complejidades resultantes:
+  - enqueue: O(n) — busca la posicion correcta recorriendo la lista
+  - dequeue: O(1) — siempre extrae del frente (mayor prioridad)
+  - peek:    O(1) — solo mira el frente sin extraer
+
+DECISION 4 - Comportamiento FIFO dentro del mismo nivel de prioridad
+---------------------------------------------------------------------
+Si dos mails tienen la misma prioridad, el que llego primero aparece primero.
+Esto se garantiza con la condicion del while en enqueue:
+
+    while (current.next != null && current.next.priority >= newNode.priority)
+
+La condicion es >= (mayor O IGUAL). Esto hace que el nuevo nodo se inserte
+DESPUES de todos los que tienen la misma prioridad, respetando el orden de
+llegada. Si la condicion fuera solo >, los de igual prioridad quedarian al reves.
+
+DECISION 5 - Leer un mail lo elimina de la cola
+------------------------------------------------
+Cuando el usuario lee un mail de una pestana, ese mail se extrae de la cola
+(dequeue). No queda en la pestana.
+
+Razon: modelamos la pestana como una cola de procesamiento. Leer un mail es
+procesarlo. Esto mantiene la cola limpia y es coherente con el concepto del TDA.
+Ademas permite defender la decision en el parcial con un argumento claro.
+
+DECISION 6 - Separacion de responsabilidades
+---------------------------------------------
+El proyecto tiene 4 paquetes con responsabilidades claras y separadas:
+
+  priorityQueue/  → solo el TDA, no sabe nada de mails
+  email/          → logica de negocio, no sabe nada de consola
+  ui/             → solo interaccion con el usuario, no toca las colas
+  application/    → solo punto de entrada
+
+Ningun paquete cruza su responsabilidad. Esto hace el codigo mas mantenible
+y mas facil de explicar: "esta clase hace UNA cosa y solo esa cosa".
+
+DECISION 7 - Listar sin destruir la cola (patron auxiliar)
+-----------------------------------------------------------
+La interfaz del TDA no expone iteradores, solo enqueue y dequeue.
+Para mostrar todos los mails sin destruir la cola, usamos una cola auxiliar:
+
+  1. Desencolar todo a una lista (para mostrar) y a una cola auxiliar (copia)
+  2. Restaurar la cola original desde la auxiliar
+
+Es O(n) en tiempo y espacio, pero es la solucion correcta respetando el
+contrato del TDA. No se rompe la interfaz ni se agrega un metodo de iteracion.
+
+
+--------------------------------------------------------------------------------
+3. ESTRUCTURA DE ARCHIVOS
+--------------------------------------------------------------------------------
+
+tp6/
+├── out/                               Clases compiladas (.class)
+└── src/
+    ├── application/
+    │   └── MainProgram.java
+    ├── email/
+    │   ├── Email.java
+    │   ├── EmailSystem.java
+    │   ├── Priority.java
+    │   └── Tab.java
+    ├── priorityQueue/
+    │   ├── LinkedPriorityQueue.java
+    │   ├── PriorityNode.java
+    │   └── SimplePriorityQueue.java
+    └── ui/
+        └── ConsoleUI.java
+
+
+--------------------------------------------------------------------------------
+4. QUE HACE CADA ARCHIVO
+--------------------------------------------------------------------------------
+
+PAQUETE priorityQueue/
+-----------------------
+
+SimplePriorityQueue.java
+  La interfaz del TDA. Define el contrato que debe cumplir cualquier
+  implementacion: enqueue, dequeue, peek, size, isEmpty, clear.
+  Es generica (<T>) para poder usarse con cualquier tipo de dato.
+  No tiene logica, solo firmas de metodos con sus javadocs.
+
+PriorityNode.java
+  El nodo de la lista enlazada interna. Guarda tres cosas:
+    - value: el dato almacenado (tipo T)
+    - priority: el nivel de prioridad numerico
+    - next: referencia al siguiente nodo
+  Es una clase de soporte. Solo la conoce LinkedPriorityQueue.
+
+LinkedPriorityQueue.java
+  La implementacion del TDA. Usa una lista enlazada simple que se mantiene
+  ordenada en todo momento (mayor prioridad al frente).
+  Metodos clave:
+    enqueue(value, priority): inserta en la posicion correcta segun prioridad.
+      Recorre la lista hasta encontrar el lugar donde insertar. Condicion >=
+      garantiza FIFO dentro del mismo nivel.
+    dequeue(): extrae el head (siempre el de mayor prioridad). O(1).
+    peek(): devuelve el valor del head sin extraerlo. O(1).
+    clear(): pone head en null y size en 0. El garbage collector libera los nodos.
+
+
+PAQUETE email/
+--------------
+
+Priority.java
+  Enum con dos valores: ALTO y BAJO.
+  Cada valor tiene un numericValue (ALTO=2, BAJO=1) que se pasa directamente
+  al enqueue de la PriorityQueue. El mapeo es interno al enum.
+
+Tab.java
+  Enum con tres valores: PRINCIPAL, NOTIFICACIONES, SPAM.
+  Cada uno tiene un displayName para mostrar en pantalla.
+
+Email.java
+  La entidad que representa un correo electronico.
+  Campos: subject (asunto), priority (prioridad), tab (pestana).
+  El campo tab empieza en null porque el mail llega sin pestana asignada.
+  Se asigna despues desde la bandeja con assignTab(). Una vez asignado,
+  no cambia. La clase no tiene logica, solo almacena datos.
+
+EmailSystem.java
+  El nucleo logico del sistema. Contiene las 4 PriorityQueues:
+    - inbox: bandeja de entrada
+    - principal, notificaciones, spam: las pestanas
+  Metodos clave:
+    receiveEmail(email): encola en inbox con la prioridad del mail.
+    classifyTopInboxEmail(tab): hace dequeue de inbox, asigna la pestana,
+      y encola en la cola de esa pestana.
+    readTopEmail(tab): hace dequeue de la pestana indicada.
+    listInbox() / listTab(tab): retorna lista sin destruir la cola (patron
+      auxiliar con cola temporal).
+    getQueueForTab(tab): metodo privado que mapea Tab -> LinkedPriorityQueue.
+      Centraliza el mapeo para no repetirlo en cada metodo publico.
+
+
+PAQUETE ui/
+-----------
+
+ConsoleUI.java
+  Maneja toda la interaccion con el usuario.
+  No contiene logica de negocio ni accede a las colas directamente.
+  Solo llama metodos de EmailSystem y muestra resultados.
+  Metodos principales:
+    start(): loop principal con el menu. Corre hasta que el usuario elige salir.
+    composeEmail(): pide asunto y prioridad, llama receiveEmail().
+    viewInbox(): lista la bandeja, ofrece clasificar el mail de mayor prioridad.
+    classifyTopEmail(): pide la pestana destino, llama classifyTopInboxEmail().
+    viewTabMenu(): submenu para elegir que pestana ver.
+    viewTab(tab): lista la pestana, ofrece leer el mail de mayor prioridad.
+  Metodos de validacion (todos en loop hasta recibir input valido):
+    readSubject(): rechaza cadenas vacias o con solo espacios.
+    readPriority(): acepta "1" (ALTO) o "2" (BAJO), rechaza cualquier otra cosa.
+    readTab(): acepta "1", "2" o "3", rechaza cualquier otra cosa.
+    readIntInRange(min, max): parsea entero, valida rango, maneja NumberFormatException.
+
+
+PAQUETE application/
+--------------------
+
+MainProgram.java
+  Punto de entrada. Solo crea EmailSystem y ConsoleUI, y llama ui.start().
+  No tiene logica propia. Tres lineas de codigo util.
+
+
+--------------------------------------------------------------------------------
+5. PARTES CRITICAS A DEFENDER EN EL PARCIAL
+--------------------------------------------------------------------------------
+
+A. LA CONDICION DEL ENQUEUE (la mas importante)
+-------------------------------------------------
+En LinkedPriorityQueue.enqueue():
+
+    while (current.next != null && current.next.priority >= newNode.priority)
+
+Por que >= y no >?
+
+Con >=: el nuevo nodo se inserta DESPUES de todos los que tienen igual prioridad.
+  → El primero en llegar queda primero. FIFO correcto.
+
+Con > : el nuevo nodo se inserta ANTES de los que tienen igual prioridad.
+  → El ultimo en llegar quedarıa primero. LIFO incorrecto.
+
+Para defenserlo en papel: insertar mail1(ALTO) y mail2(ALTO) y mostrar
+que mail1 queda antes de mail2 en la lista resultante.
+
+B. POR QUE LISTA ENLAZADA Y NO HEAP
+-------------------------------------
+La PriorityQueue de Java usa un heap binario porque esta pensada para uso
+general con millones de elementos. Nosotros tenemos 2 niveles de prioridad
+y una cantidad de mails acotada. La lista enlazada ordenada es O(n) para
+insertar pero el codigo es mas simple, mas legible y mas facil de verificar
+correctamente. Para este dominio, la diferencia de performance es irrelevante.
+
+C. POR QUE 4 COLAS Y NO 1 CON FILTRADO
+-----------------------------------------
+Una sola cola con filtrado romperia el invariante del TDA: si filtramos,
+estamos recorriendo la cola para buscar elementos especificos, lo cual
+convierte la cola en una lista. Cuatro colas independientes mantienen
+cada una su propio orden de prioridad y respetan el contrato del TDA.
+
+D. COMO SE LISTA SIN DESTRUIR LA COLA
+----------------------------------------
+La interfaz no tiene iteradores por diseno: una cola de prioridad no deberia
+exponer acceso aleatorio, solo el elemento de mayor prioridad. Para mostrar
+todos los elementos sin violar el TDA, usamos una cola auxiliar temporal.
+Es la solucion correcta que respeta el contrato de la interfaz.
+
+E. LA SEPARACION ENTRE TDA Y APLICACION
+-----------------------------------------
+El TDA (priorityQueue/) no sabe que existe un sistema de mails. El sistema
+de mails (email/) no sabe que existe una consola. La consola (ui/) no sabe
+como funciona la PriorityQueue. Cada capa habla solo con la inmediata inferior.
+Si mañana cambiamos la implementacion a un heap, no cambia ni una linea del
+sistema de mails ni de la UI.
+
+
+--------------------------------------------------------------------------------
+6. MANEJO DE ERRORES: QUE SE TRATA Y DONDE
+--------------------------------------------------------------------------------
+
+El principio que seguimos es el que pide la consigna:
+  - El TDA LANZA excepciones si recibe datos invalidos.
+  - La APLICACION evita que eso ocurra validando antes de llamar al TDA.
+
+ERRORES QUE LANZA EL TDA (LinkedPriorityQueue):
+  IllegalArgumentException  → enqueue() con value null o priority negativa
+  NoSuchElementException    → dequeue() o peek() sobre cola vacia
+
+ERRORES QUE PREVIENE LA APLICACION (ConsoleUI):
+  Input vacio en asunto     → readSubject() rechaza strings vacios, pide de nuevo
+  Prioridad invalida        → readPriority() solo acepta "1" o "2"
+  Pestana invalida          → readTab() solo acepta "1", "2" o "3"
+  Numero fuera de rango     → readIntInRange() valida minimo y maximo
+  Input no numerico         → readIntInRange() captura NumberFormatException
+  Operacion en cola vacia   → viewInbox() y viewTab() verifican isEmpty() antes
+                               de ofrecer opciones que llamarian a dequeue()
+
+Por que este diseno:
+  Las excepciones del TDA son para usos incorrectos del TDA (bugs del
+  programador). La validacion de la UI es para inputs incorrectos del usuario
+  (comportamiento esperado). Son dos tipos de error distintos y se manejan
+  en capas distintas.
+
+
+--------------------------------------------------------------------------------
+7. COMO COMPILAR Y EJECUTAR
+--------------------------------------------------------------------------------
+
+Desde la carpeta tp6/:
+
+  Compilar:
+    javac -d out -sourcepath src src/application/MainProgram.java
+
+  Ejecutar:
+    java -cp out application.MainProgram
+
+
+--------------------------------------------------------------------------------
+8. FLUJO COMPLETO DE USO (ejemplo para probar en parcial)
+--------------------------------------------------------------------------------
+
+1. Elegir opcion 1 (Redactar mail)
+   → Ingresar asunto: "Reunion urgente"
+   → Ingresar prioridad: 1 (ALTO)
+   → Mail va a bandeja de entrada
+
+2. Elegir opcion 1 (Redactar mail)
+   → Ingresar asunto: "Newsletter"
+   → Ingresar prioridad: 2 (BAJO)
+   → Mail va a bandeja de entrada
+
+3. Elegir opcion 2 (Bandeja de entrada)
+   → Se ven 2 mails: primero [ALTO] Reunion urgente, luego [BAJO] Newsletter
+   → Elegir opcion 1 (Clasificar el de mayor prioridad)
+   → Elegir pestana 1 (Principal)
+   → "Reunion urgente" [ALTO] se mueve a Principal
+
+4. Elegir opcion 3 (Ver pestana) → opcion 1 (Principal)
+   → Se ve "Reunion urgente" [ALTO]
+   → Elegir leer → el mail se extrae y se muestra completo
+
+
+================================================================================
