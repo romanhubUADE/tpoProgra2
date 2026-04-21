@@ -1,16 +1,14 @@
 package setModule;
 
-public interface SimpleSet {
-    public  boolean add(E element);
-    public  boolean remove(E element);
-    public  boolean contains(E element);
-    public int size();
-    public boolean isEmpty();
-    public void clear();
-    private E[] to Array();
-    public SimpleSet<E> unionWith(SimpleSet<E> other);
-    public SimpleSet<E> intersectWith(SimpleSet<E> other);
-    public SimpleSet<E> differenceWith(SimpleSet<E> other);
-    
-    
+public interface SimpleSet<E> {
+    boolean add(E element);
+    boolean remove(E element);
+    boolean contains(E element);
+    int size();
+    boolean isEmpty();
+    void clear();
+    E[] toArray();
+    SimpleSet<E> unionWith(SimpleSet<E> other);
+    SimpleSet<E> intersectWith(SimpleSet<E> other);
+    SimpleSet<E> differenceWith(SimpleSet<E> other);
 }
