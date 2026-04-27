@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TP 07 — Sistema de Login con TDA Dictionary</title>
+  <style>
+    :root {
+      --bg:        #0f1117;
+      --surface:   #1a1d27;
+      --card:      #21253a;
+      --border:    #2e3350;
+      --accent:    #6c8ef7;
+      --accent2:   #a78bfa;
+      --green:     #34d399;
+      --yellow:    #fbbf24;
+      --red:       #f87171;
+      --text:      #e2e8f0;
+      --muted:     #8892aa;
+      --code-bg:   #141722;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #1a1d27 0%, #0f1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+    }
+    header .badge {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .25rem .75rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    header p {
+      color: var(--muted);
+      margin-top: .5rem;
+      font-size: 1.05rem;
+    }
+
+    /* ── Layout ── */
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    /* ── Secciones ── */
+    section {
+      margin-bottom: 3rem;
+    }
+    section h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--accent);
+      border-left: 3px solid var(--accent);
+      padding-left: .75rem;
+      margin-bottom: 1.25rem;
+    }
+    section h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--accent2);
+      margin: 1.5rem 0 .5rem;
+    }
+    p { color: var(--text); margin-bottom: .75rem; }
+    p + p { margin-top: 0; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .card-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: .4rem;
+    }
+    .card p { margin: 0; color: var(--muted); font-size: .95rem; }
+
+    /* ── Grid de 2 cols ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* ── Badges de tipo ── */
+    .tag {
+      display: inline-block;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .15rem .55rem;
+      border-radius: 999px;
+      margin-right: .4rem;
+    }
+    .tag-interface { background: #1e3a5f; color: #60a5fa; }
+    .tag-impl      { background: #1a3a2a; color: var(--green); }
+    .tag-model     { background: #3a2a1a; color: var(--yellow); }
+    .tag-exception { background: #3a1a1a; color: var(--red); }
+    .tag-service   { background: #2a1a3a; color: var(--accent2); }
+    .tag-ui        { background: #1a2a3a; color: #67e8f9; }
+    .tag-main      { background: #2a2a1a; color: #fde68a; }
+
+    /* ── Árbol de archivos ── */
+    .file-tree {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      font-size: .88rem;
+      line-height: 1.9;
+      overflow-x: auto;
+    }
+    .file-tree .dir  { color: var(--accent); font-weight: 700; }
+    .file-tree .file { color: var(--text); }
+    .file-tree .file span { color: var(--muted); font-size: .8rem; margin-left: .5rem; }
+
+    /* ── Código inline ── */
+    code {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      padding: .1rem .4rem;
+      border-radius: 4px;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      font-size: .85em;
+      color: #a5f3fc;
+    }
+
+    /* ── Bloque de código ── */
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      overflow-x: auto;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      font-size: .85rem;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+    pre .kw  { color: #c792ea; }
+    pre .tp  { color: #82aaff; }
+    pre .str { color: #c3e88d; }
+    pre .cm  { color: #546e7a; font-style: italic; }
+    pre .nm  { color: #ffcb6b; }
+
+    /* ── Diagrama de flujo ── */
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+    .flow-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .5rem 1rem;
+      font-size: .9rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .flow-arrow { color: var(--muted); font-size: 1.2rem; }
+
+    /* ── Tabla ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .9rem;
+      margin: 1rem 0;
+    }
+    th {
+      background: var(--card);
+      color: var(--accent);
+      padding: .6rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    td {
+      padding: .65rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(108,142,247,.06); }
+    td:first-child { font-family: monospace; color: #a5f3fc; }
+
+    /* ── Callout ── */
+    .callout {
+      border-left: 3px solid var(--accent2);
+      background: rgba(167,139,250,.08);
+      border-radius: 0 8px 8px 0;
+      padding: .85rem 1.1rem;
+      margin: 1rem 0;
+      font-size: .95rem;
+      color: var(--muted);
+    }
+    .callout strong { color: var(--accent2); }
+
+    /* ── Steps ── */
+    .steps { counter-reset: step; list-style: none; }
+    .steps li {
+      counter-increment: step;
+      display: flex;
+      gap: 1rem;
+      margin-bottom: .85rem;
+    }
+    .steps li::before {
+      content: counter(step);
+      background: var(--accent);
+      color: #fff;
+      font-weight: 800;
+      font-size: .8rem;
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: .2rem;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: .85rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="badge">Programación II — TP 07</div>
+  <h1>Sistema de Login con TDA Dictionary</h1>
+  <p>Implementación del Tipo de Dato Abstracto Dictionary en Java · Con bonus de bloqueo de cuenta</p>
+</header>
+
+<main>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- 1. QUÉ PIDE EL TP                                    -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <section>
+    <h2>¿Qué pide el TP?</h2>
+    <p>
+      El TP 07 tiene dos partes concretas:
+    </p>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">① Implementar el TDA Dictionary</div>
+        <p>Construir la interfaz y su implementación desde cero — sin usar <code>HashMap</code> ni colecciones de Java. El TDA debe lanzar excepciones ante datos inválidos.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">② Aplicación de consola en Java</div>
+        <p>Elegir entre <em>Sistema de Login</em> o <em>Sistema de Inventario</em>. Se eligió el Login. El TDA Dictionary es la estructura de datos subyacente.</p>
+      </div>
+    </div>
+    <h3>Requisitos del Sistema de Login</h3>
+    <ul class="steps">
+      <li>Registrar usuarios con nombre único y contraseña.</li>
+      <li>Iniciar sesión verificando que la contraseña coincida.</li>
+      <li>Manejar todos los inputs inválidos del usuario sin crashear.</li>
+      <li><strong>Bonus:</strong> bloquear la cuenta al tercer intento fallido. El bloqueo persiste aunque el usuario vuelva al menú principal.</li>
+    </ul>
+    <div class="callout">
+      <strong>Regla clave del enunciado:</strong> las implementaciones del TDA deben lanzar excepciones ante comandos inválidos. Es la <em>aplicación</em> la que debe garantizar que eso nunca ocurra — validando antes de llamar.
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- 2. ESTRUCTURA DE ARCHIVOS                             -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <section>
+    <h2>Estructura de archivos</h2>
+    <div class="file-tree">
+      <div><span class="dir">TPO7/</span></div>
+      <div>&nbsp;&nbsp;├── <span class="dir">src/</span></div>
+      <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="dir">tda/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--muted);font-size:.8rem">// El TDA en sí</span></div>
+      <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="file">Dictionary.java<span>Interfaz del TDA</span></span></div>
+      <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span class="file">LinkedDictionary.java<span>Implementación con lista enlazada</span></span></div>
+      <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="dir">model/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--muted);font-size:.8rem">// Entidades de dominio</span></div>
+      <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span class="file">User.java<span>Datos del usuario + lógica de bloqueo</span></span></div>
+      <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="dir">exception/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--muted);font-size:.8rem">// Excepciones propias del TDA</span></div>
+      <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="file">DuplicateKeyException.java<span>Clave repetida en put()</span></span></div>
+      <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span class="file">KeyNotFoundException.java<span>Clave inexistente en get/update/remove</span></span></div>
+      <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="dir">service/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--muted);font-size:.8rem">// Lógica de negocio</span></div>
+      <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span class="file">AuthService.java<span>Registro, login, manejo de bloqueos</span></span></div>
+      <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="dir">ui/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--muted);font-size:.8rem">// Interfaz de usuario</span></div>
+      <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span class="file">ConsoleMenu.java<span>Menús, lectura de inputs, mensajes</span></span></div>
+      <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span class="file">Main.java<span>Punto de entrada — arranca la app</span></span></div>
+      <div>&nbsp;&nbsp;└── <span class="file">explicacion.html<span>Este archivo</span></span></div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- 3. QUÉ HACE CADA ARCHIVO                             -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <section>
+    <h2>Qué hace cada archivo</h2>
+
+    <h3><span class="tag tag-interface">Interface</span> tda/Dictionary.java</h3>
+    <p>
+      Define el <strong>contrato</strong> del TDA. Declara las operaciones que cualquier implementación debe proveer, sin decir cómo.
+    </p>
+    <table>
+      <thead><tr><th>Método</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td>put(key, value)</td><td>Inserta un par. Lanza <code>DuplicateKeyException</code> si la clave ya existe.</td></tr>
+        <tr><td>get(key)</td><td>Devuelve el valor. Lanza <code>KeyNotFoundException</code> si no existe.</td></tr>
+        <tr><td>update(key, value)</td><td>Actualiza el valor. Lanza <code>KeyNotFoundException</code> si no existe.</td></tr>
+        <tr><td>remove(key)</td><td>Elimina el par. Lanza <code>KeyNotFoundException</code> si no existe.</td></tr>
+        <tr><td>containsKey(key)</td><td>Devuelve <code>true</code>/<code>false</code> sin lanzar excepciones.</td></tr>
+        <tr><td>isEmpty()</td><td>Indica si el diccionario está vacío.</td></tr>
+        <tr><td>size()</td><td>Cantidad de pares almacenados.</td></tr>
+      </tbody>
+    </table>
+
+    <h3><span class="tag tag-impl">Impl</span> tda/LinkedDictionary.java</h3>
+    <p>
+      Implementación del Dictionary usando una <strong>lista enlazada simple</strong>. No usa ninguna colección de Java — construye sus propios nodos (<code>Entry&lt;K,V&gt;</code> como clase interna privada).
+    </p>
+    <p>
+      Cada nodo guarda: clave, valor, y puntero al siguiente nodo. Los nuevos elementos se insertan al frente de la lista (O(1)). Las búsquedas recorren secuencialmente (O(n)).
+    </p>
+    <pre><span class="cm">// Nodo interno (clase privada dentro de LinkedDictionary)</span>
+<span class="kw">private static class</span> <span class="tp">Entry</span>&lt;<span class="tp">K</span>, <span class="tp">V</span>&gt; {
+    <span class="tp">K</span> key;
+    <span class="tp">V</span> value;
+    <span class="tp">Entry</span>&lt;<span class="tp">K</span>, <span class="tp">V</span>&gt; next;
+}</pre>
+    <div class="callout">
+      <strong>¿Por qué lista enlazada y no array?</strong> El tamaño del diccionario no se conoce de antemano. La lista enlazada crece dinámicamente sin desperdiciar memoria. Un array requeriría redimensionamiento manual.
+    </div>
+
+    <h3><span class="tag tag-exception">Exception</span> exception/DuplicateKeyException.java &amp; KeyNotFoundException.java</h3>
+    <p>
+      Excepciones <em>checked</em> propias del TDA. Al ser <em>checked</em>, Java obliga al código cliente a manejarlas (o declararlas), lo que hace el contrato explícito en tiempo de compilación.
+    </p>
+
+    <h3><span class="tag tag-model">Model</span> model/User.java</h3>
+    <p>
+      Representa a un usuario del sistema. Almacena usuario, contraseña y el <strong>estado de seguridad</strong>: contador de intentos fallidos y si la cuenta está bloqueada.
+    </p>
+    <p>
+      La lógica de bloqueo vive aquí (<code>registerFailedAttempt()</code>), no en el servicio ni en la UI — respetando que cada clase tenga una sola responsabilidad.
+    </p>
+    <pre><span class="kw">public void</span> <span class="nm">registerFailedAttempt</span>() {
+    failedAttempts++;
+    <span class="kw">if</span> (failedAttempts &gt;= <span class="nm">MAX_FAILED_ATTEMPTS</span>) {
+        blocked = <span class="kw">true</span>;   <span class="cm">// bloqueo automático al llegar al límite</span>
+    }
+}</pre>
+
+    <h3><span class="tag tag-service">Service</span> service/AuthService.java</h3>
+    <p>
+      Contiene toda la <strong>lógica de negocio</strong> del sistema de login. Usa el Dictionary para guardar usuarios y define el comportamiento de registro y login como enums de resultado (en lugar de excepciones), lo que hace el flujo más limpio del lado de la UI.
+    </p>
+    <p>
+      <strong>Patrón clave:</strong> siempre llama a <code>containsKey()</code> <em>antes</em> de <code>put()</code>, <code>get()</code>, o <code>update()</code> — garantizando que el TDA nunca reciba comandos inválidos (como exige el enunciado).
+    </p>
+    <pre><span class="cm">// Ejemplo: registro seguro</span>
+<span class="kw">if</span> (users.<span class="nm">containsKey</span>(username)) {
+    <span class="kw">return</span> <span class="tp">RegisterResult</span>.<span class="nm">USERNAME_ALREADY_EXISTS</span>;  <span class="cm">// nunca llega al put()</span>
+}
+users.<span class="nm">put</span>(username, <span class="kw">new</span> <span class="tp">User</span>(username, password));   <span class="cm">// seguro</span></pre>
+
+    <h3><span class="tag tag-ui">UI</span> ui/ConsoleMenu.java</h3>
+    <p>
+      Maneja toda la interacción con el usuario: imprime los menús, lee inputs y muestra resultados. <strong>No tiene lógica de negocio</strong> — sólo llama a <code>AuthService</code> e interpreta el resultado.
+    </p>
+    <p>
+      Dos métodos de lectura defensivos que nunca retornan un input inválido:
+    </p>
+    <ul style="margin-left:1.5rem; color:var(--muted);">
+      <li><code>readMenuOption(min, max)</code> — repite hasta obtener un entero en el rango.</li>
+      <li><code>readNonBlank(prompt)</code> — repite hasta obtener texto no vacío.</li>
+    </ul>
+
+    <h3><span class="tag tag-main">Main</span> Main.java</h3>
+    <p>
+      Punto de entrada. Crea el <code>AuthService</code> y lo inyecta en el <code>ConsoleMenu</code>. <code>ConsoleMenu</code> no construye sus propias dependencias — las recibe. Esto se llama <strong>Inversión de Dependencias</strong>.
+    </p>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- 4. CÓMO FLUYE LA INFORMACIÓN                         -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <section>
+    <h2>Cómo fluye la información</h2>
+
+    <h3>Registro de usuario</h3>
+    <div class="flow">
+      <div class="flow-box">Usuario escribe<br>nombre + contraseña</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">ConsoleMenu<br>readNonBlank()</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">AuthService<br>.register()</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">containsKey()?<br>¿ya existe?</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Dictionary<br>.put()</div>
+    </div>
+
+    <h3>Inicio de sesión (con bonus de bloqueo)</h3>
+    <div class="flow">
+      <div class="flow-box">Usuario escribe<br>credenciales</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">AuthService<br>.login()</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Dictionary<br>.get(username)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">¿isBlocked?<br>¿password ok?</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">User<br>.registerFailed()<br>o .reset()</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Dictionary<br>.update()</div>
+    </div>
+
+    <div class="callout">
+      El bloqueo <strong>persiste en el Dictionary</strong>. Como el objeto <code>User</code> vive dentro del diccionario y se actualiza con <code>update()</code>, el bloqueo sobrevive a cualquier retorno al menú principal — exactamente como pide el bonus.
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- 5. DECISIONES DE DISEÑO                              -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <section>
+    <h2>Decisiones de diseño y por qué</h2>
+
+    <div class="card">
+      <div class="card-title">¿Por qué lista enlazada y no array?</div>
+      <p>El array requiere tamaño fijo o redimensionamiento manual. La lista enlazada crece con cada nuevo usuario sin desperdiciar espacio. Para la escala de este TP (pocos usuarios en memoria), es la opción más simple y correcta.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">¿Por qué enums de resultado en AuthService en lugar de excepciones?</div>
+      <p>Las excepciones son para situaciones excepcionales. Escribir una contraseña incorrecta es un flujo <em>esperado</em>. Los enums (<code>LoginResult.WRONG_PASSWORD</code>) hacen el switch en la UI más legible y explícito que un try-catch anidado.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">¿Por qué el bloqueo vive en User y no en AuthService?</div>
+      <p>Principio de Responsabilidad Única: <code>User</code> sabe sus propios datos y estado. Si mañana cambia la lógica de bloqueo (por ejemplo, desbloquear después de N horas), sólo cambia <code>User</code>, no el servicio.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">¿Por qué ConsoleMenu recibe AuthService en el constructor?</div>
+      <p>Inversión de Dependencias: <code>ConsoleMenu</code> no crea sus propias dependencias. Esto facilita el testing y el reemplazo de implementaciones. <code>Main.java</code> es el único lugar donde se ensamblan las piezas.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">¿Por qué siempre containsKey() antes de put()/get()/update()?</div>
+      <p>El enunciado lo exige explícitamente: el TDA lanza excepciones ante datos inválidos, y es la aplicación la que debe evitar que eso ocurra. <code>containsKey()</code> es la guardia que garantiza que las operaciones del TDA siempre reciban entradas válidas.</p>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- 6. CÓMO COMPILAR Y EJECUTAR                          -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <section>
+    <h2>Cómo compilar y ejecutar</h2>
+    <p>Desde la carpeta <code>TPO7/src/</code>:</p>
+    <pre><span class="cm"># Compilar todos los archivos java</span>
+javac -d . tda/*.java exception/*.java model/*.java service/*.java ui/*.java Main.java
+
+<span class="cm"># Ejecutar</span>
+java Main</pre>
+    <div class="callout">
+      El flag <code>-d .</code> le dice al compilador que genere la estructura de paquetes en el directorio actual, que es lo que necesita Java para encontrar las clases por paquete.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  TP 07 — Programación II &nbsp;·&nbsp; TDA Dictionary con Sistema de Login &nbsp;·&nbsp; Java
+</footer>
+
+</body>
+</html>
