@@ -182,6 +182,9 @@
   <a href="#linkedlist">Lista doblemente enlazada</a>
   <a href="#resize">Resize dinamico</a>
   <a href="#framework">Framework Exercise</a>
+  <span class="nav-group">Referencia completa</span>
+  <a href="#archivos">Archivo por archivo</a>
+  <a href="#cuando-usar">Cuando usar cada TDA</a>
 </nav>
 
 <main>
@@ -1078,6 +1081,735 @@ size++;</code></pre>
     </div>
   </div>
 
+</section>
+
+<!-- ARCHIVOS -->
+<section id="archivos">
+  <h2>Archivo por archivo — referencia completa</h2>
+  <p>Descripcion detallada de cada archivo del proyecto, su responsabilidad y lo que hace exactamente.</p>
+
+  <!-- APPLICATION -->
+  <h3 style="margin-top:32px">📁 application/</h3>
+  <p style="color:var(--muted);font-size:14px;margin-bottom:16px">El esqueleto del programa. Define como se lanza, como se navega entre ejercicios y el contrato que todos los ejercicios deben cumplir.</p>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-app">MainProgram.java</span>
+      <span style="color:var(--muted);font-size:13px">Punto de entrada del programa</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Contiene el <code>main()</code> — es la primera clase que ejecuta la JVM. Crea un Scanner compartido y entra en un loop infinito: muestra el menu principal, espera que el usuario elija un ejercicio, lo ejecuta hasta que el usuario vuelva al menu, y repite.
+      <br><br>
+      <strong>Campos clave:</strong>
+      <ul style="margin-top:6px;padding-left:18px;font-size:14px">
+        <li><code>running</code> — controla si el programa sigue andando (false = opcion 0)</li>
+        <li><code>exercise</code> — referencia al ejercicio activo, de tipo <code>Exercise</code> (interfaz)</li>
+      </ul>
+      <br>
+      <strong>Metodo selectExercise():</strong> Muestra el menu numerico (0-9), hace <code>switch</code> sobre el input y asigna la instancia de ejercicio correspondiente. La recursion al final del <code>default</code> maneja inputs invalidos sin romper el flujo.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-interface">Exercise.java</span>
+      <span style="color:var(--muted);font-size:13px">Clase abstracta base — patron Template Method</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Define el contrato que todos los ejercicios deben cumplir. Tiene el metodo <code>run()</code> ya implementado (loop mientras <code>running</code> sea true) y el metodo abstracto <code>exerciseLogic()</code> que cada subclase implementa a su manera.
+      <br><br>
+      <strong>Por que <code>running = true</code> al final de run():</strong> Cuando un ejercicio pone <code>running = false</code> para volver al menu principal, el loop de <code>run()</code> termina. Pero si el usuario elige ese mismo ejercicio de nuevo, necesita que <code>running</code> empiece en <code>true</code>. Por eso se resetea al salir.
+      <br><br>
+      <strong>Por que el Scanner se pasa por constructor:</strong> El Scanner envuelve <code>System.in</code>. Si cada ejercicio creara el suyo, habria multiples buffers leyendo el mismo stream y se perderian inputs. Con uno solo compartido, todo pasa por el mismo canal.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-app">TestExercise.java</span>
+      <span style="color:var(--muted);font-size:13px">Plantilla / ejercicio de prueba</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Es la implementacion mas simple posible de <code>Exercise</code>. Su unica funcion es mostrar un mensaje de bienvenida y la opcion de volver al menu. Sirve como plantilla para crear nuevos ejercicios: copia, renombra, agrega tu logica.
+    </div>
+  </div>
+
+  <!-- LIST MODULE -->
+  <h3 style="margin-top:40px">📁 listModule/</h3>
+  <p style="color:var(--muted);font-size:14px;margin-bottom:16px">Implementacion del TDA Lista. Base para Stack, Queue y Set que reusan <code>LinkedNode</code>.</p>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-interface">SimpleList.java</span>
+      <span style="color:var(--muted);font-size:13px">Interface — contrato del TDA Lista</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Define los 10 metodos que cualquier implementacion de lista debe proveer. Usa un parametro generico <code>&lt;E&gt;</code> para que funcione con cualquier tipo. Es el unico tipo que usan los ejercicios — nunca referencian directamente <code>SimpleArrayList</code> o <code>SimpleLinkedList</code>.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-array">SimpleArrayList.java</span>
+      <span style="color:var(--muted);font-size:13px">Lista basada en arreglo dinamico</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Implementa <code>SimpleList</code> usando un arreglo de objetos genericos. Empieza con capacidad 4 y se duplica cuando se llena.
+      <br><br>
+      <strong>Metodos importantes:</strong>
+      <ul style="margin-top:6px;padding-left:18px;font-size:14px">
+        <li><code>add(E)</code>: O(1) amortizado — agrega al final, resize si es necesario</li>
+        <li><code>add(int, E)</code>: O(n) — corre todos los elementos a la derecha desde <code>size</code> hasta <code>index</code>, luego inserta</li>
+        <li><code>remove(int)</code>: O(n) — corre todos los elementos a la izquierda y pone <code>null</code> en la ultima posicion para evitar memory leaks</li>
+        <li><code>validateIndex</code> vs <code>validateInsertIndex</code>: la primera acepta 0..size-1 (para get/set/remove), la segunda 0..size (para add que puede insertar al final)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-linked">SimpleLinkedList.java</span>
+      <span style="color:var(--muted);font-size:13px">Lista doblemente enlazada</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Implementa <code>SimpleList</code> con nodos <code>LinkedNode</code> conectados en ambas direcciones. Mantiene referencias al <code>first</code> y al <code>last</code> para operaciones O(1) en extremos.
+      <br><br>
+      <strong>Optimizacion clave — getNodeByIndex:</strong> Si el indice buscado esta en la primera mitad de la lista, navega desde <code>first</code>. Si esta en la segunda mitad, navega desde <code>last</code>. Reduce el recorrido maximo de n a n/2.
+      <br><br>
+      <strong>removeAndReconnect:</strong> Centraliza la logica de eliminacion en un helper que maneja los 4 casos posibles (unico nodo, primero, ultimo, medio). Esto evita duplicar esa logica en <code>remove(int)</code> y <code>remove(Object)</code>.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-linked">LinkedNode.java</span>
+      <span style="color:var(--muted);font-size:13px">Nodo bidireccional reutilizable</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Estructura de datos minima: un valor generico <code>E value</code> mas dos punteros <code>next</code> y <code>prev</code>. Es publico e intencionalmente simple — no tiene getters porque se accede directamente a los campos.
+      <br><br>
+      <strong>Reutilizacion:</strong> Este mismo nodo lo usan <code>SimpleLinkedStack</code>, <code>SimpleLinkedQueue</code> y <code>SimpleLinkedSet</code> haciendo <code>import listModule.LinkedNode</code>. No hay duplicacion de codigo.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-app">ListExercise.java</span>
+      <span style="color:var(--muted);font-size:13px">Ejercicio interactivo de lista</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Permite al usuario manipular una lista de Strings en tiempo real. Tiene 5 fases: menu (0), agregar (1), eliminar por indice (2), eliminar por referencia (3), limpiar (4).
+      <br><br>
+      <strong>printList():</strong> Muestra todos los elementos separados por coma. Usa <code>list.get(i)</code> en un loop — funciona identico con Array o Linked porque ambas implementan la misma interfaz.
+      <br><br>
+      <strong>Nota del comentario en constructor:</strong> <code>// cambiar por SimpleLinkedList para comparar</code> — esta ahi a proposito para que el alumno pueda ver en vivo que el comportamiento es identico con las dos implementaciones.
+    </div>
+  </div>
+
+  <!-- STACK MODULE -->
+  <h3 style="margin-top:40px">📁 stackModule/</h3>
+  <p style="color:var(--muted);font-size:14px;margin-bottom:16px">TDA Pila (LIFO). El ultimo que entra es el primero que sale.</p>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-interface">SimpleStack.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Define los 6 metodos del TDA Pila: <code>push</code>, <code>pop</code>, <code>peek</code>, <code>clear</code>, <code>size</code>, <code>isEmpty</code>. Sin acceso por indice — eso es intencional: la pila solo expone el tope.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-array">SimpleArrayStack.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Implementa la pila con un arreglo. El "tope" es siempre <code>elements[size-1]</code>. <code>push</code> agrega al final, <code>pop</code> lee y pone null en la ultima posicion. Lanza <code>NoSuchElementException</code> si se intenta pop/peek en pila vacia.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-linked">SimpleLinkedStack.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Implementa la pila con nodos. Solo necesita un puntero: <code>last</code> (el tope). <code>push</code> crea un nuevo nodo y lo encadena como nuevo <code>last</code>. <code>pop</code> retrocede <code>last</code> al nodo anterior. Como nunca necesita navegar hasta el frente, todas las operaciones son O(1).
+      <br><br>
+      <strong>Por que importa LinkedNode de listModule:</strong> Reutiliza el nodo ya definido. No tiene sentido crear otro identico.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-app">StackExercise.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Ejercicio interactivo con 5 fases: menu, push, pop, peek, clear. A diferencia de ListExercise, no hay <code>printStack()</code> porque las pilas no tienen recorrido — solo se puede ver el tope. El status muestra size y isEmpty.
+    </div>
+  </div>
+
+  <!-- QUEUE MODULE -->
+  <h3 style="margin-top:40px">📁 queueModule/</h3>
+  <p style="color:var(--muted);font-size:14px;margin-bottom:16px">TDA Cola (FIFO). El primero que entra es el primero que sale.</p>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-interface">SimpleQueue.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Define los 6 metodos del TDA Cola: <code>enqueue</code>, <code>dequeue</code>, <code>peek</code>, <code>clear</code>, <code>size</code>, <code>isEmpty</code>. Misma firma que Stack pero con semantica FIFO.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-array">SimpleArrayQueue.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Cola con arreglo. <code>enqueue</code> agrega al final (O(1)). <code>dequeue</code> saca de la posicion 0 y corre todos los elementos una posicion a la izquierda — O(n). Esto es una limitacion conocida de la implementacion con array simple.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-linked">SimpleLinkedQueue.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Cola con nodos doblemente enlazados. Mantiene <code>first</code> (frente) y <code>last</code> (final). <code>enqueue</code> agrega al <code>last</code> en O(1). <code>dequeue</code> avanza <code>first</code> al siguiente nodo en O(1) — sin correr nada. Esta es la implementacion correcta para colas con muchas operaciones.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-app">QueueExercise.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Ejercicio interactivo con 5 fases: menu, enqueue, dequeue, peek, clear. Similar a StackExercise. El status muestra size e isEmpty.
+    </div>
+  </div>
+
+  <!-- SET MODULE -->
+  <h3 style="margin-top:40px">📁 setModule/</h3>
+  <p style="color:var(--muted);font-size:14px;margin-bottom:16px">TDA Conjunto. Sin duplicados, sin orden garantizado. Soporta operaciones matematicas de conjuntos.</p>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-interface">SimpleSet.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Define 11 metodos incluyendo las tres operaciones de conjuntos: <code>unionWith</code>, <code>intersectWith</code>, <code>differenceWith</code>. Cada operacion devuelve un nuevo <code>SimpleSet</code> sin modificar los originales — son operaciones puras (sin side effects).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-array">SimpleArraySet.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Set con arreglo. <code>add</code> primero verifica con <code>contains</code> — si el elemento ya existe, devuelve false sin agregar.
+      <br><br>
+      <strong>Truco de remove O(1):</strong> En lugar de correr elementos, pisa el eliminado con el ultimo y reduce <code>size</code>. Funciona porque el Set no garantiza orden — al profesor le importa que el elemento no este, no en que posicion estaba.
+      <br><br>
+      <strong>toArray():</strong> Devuelve una copia del arreglo del tamaño exacto de <code>size</code>. Se usa en las operaciones de conjunto para iterar sin exponer el arreglo interno.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-linked">SimpleLinkedSet.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Set con lista enlazada. A diferencia de <code>SimpleLinkedList</code>, el <code>remove</code> esta inline (no usa <code>removeAndReconnect</code>) porque la interfaz pide <code>remove(E)</code> y no hay un helper compartido para este caso. El metodo <code>same(a, b)</code> maneja el caso de valores null de forma segura.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-app">SetExercise.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> El ejercicio mas complejo visualmente. Maneja <strong>dos conjuntos simultaneamente</strong> (<code>setA</code> y <code>setB</code>) con un campo <code>selectedSet</code> que apunta al activo. Tiene 8 fases incluyendo las cuatro operaciones (union, interseccion, diferencia A-B, diferencia B-A). Los resultados se muestran y descartan — no se guardan en un tercer Set.
+    </div>
+  </div>
+
+  <!-- PRIORITY QUEUE MODULE -->
+  <h3 style="margin-top:40px">📁 priorityQueueModule/</h3>
+  <p style="color:var(--muted);font-size:14px;margin-bottom:16px">TDA Cola de Prioridad. Como una cola pero los elementos salen segun su prioridad, no por orden de llegada.</p>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-interface">SimplePriorityQueue.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Define 7 metodos. <code>enqueue</code> recibe el elemento y su prioridad como entero separado. <code>getHighestPriority()</code> devuelve el numero de prioridad del frente (sin sacar el elemento).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-array">SimpleArrayPriorityQueue.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> PQ con dos arreglos paralelos sincronizados: <code>elements[]</code> y <code>priorities[]</code>. Siempre estan ordenados de mayor a menor prioridad (numero mas bajo primero).
+      <br><br>
+      <strong>enqueue — insercion ordenada:</strong> Itera desde el final hacia el inicio, corriendo elementos a la derecha mientras tengan menor prioridad que el nuevo. Cuando encuentra el lugar correcto, inserta. O(n) en el peor caso.
+      <br><br>
+      <strong>dequeue:</strong> Saca <code>elements[0]</code> y corre todo a la izquierda — O(n). Limpia tanto el arreglo de elementos como el de prioridades.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-linked">SimpleLinkedPriorityQueue.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> PQ con nodos <code>PriorityLinkedNode</code>. La lista siempre esta ordenada: <code>first</code> tiene la mayor prioridad. <code>enqueue</code> navega desde el <code>last</code> hacia atras buscando la posicion correcta (los nuevos generalmente van al final o cerca). <code>dequeue</code> es O(1) — solo avanza <code>first</code>.
+      <br><br>
+      <strong>Por que navegar desde last en enqueue:</strong> En un email system como el TP6, los emails nuevos tienden a ser BAJO prioridad. Empezar desde el final hace la busqueda mas rapida en el caso promedio.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-linked">PriorityLinkedNode.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Como <code>LinkedNode</code> pero con un campo extra: <code>int priority</code>. No puede reutilizar <code>LinkedNode</code> porque necesita el campo de prioridad. Tiene <code>next</code> y <code>prev</code> igual que su hermano.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-app">PriorityQueueExercise.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Ejercicio interactivo con 6 fases. Al hacer enqueue, pide el valor y despues la prioridad como numero entero. Muestra size e isEmpty. El metodo <code>readPriority()</code> tiene un loop con try/catch para validar que la prioridad sea un entero valido.
+    </div>
+  </div>
+
+  <!-- DICTIONARY MODULE -->
+  <h3 style="margin-top:40px">📁 dictionaryModule/</h3>
+  <p style="color:var(--muted);font-size:14px;margin-bottom:16px">TDA Diccionario. Almacena pares clave-valor con claves unicas. Usado por AuthService como base de datos de usuarios.</p>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-interface">SimpleDictionary.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Define 9 metodos con dos parametros genericos <code>&lt;K, V&gt;</code> (Key y Value). <code>put</code> retorna el valor anterior si la clave ya existia, o null si es nueva. <code>keys()</code> y <code>values()</code> devuelven arreglos con todas las claves y valores respectivamente.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-array">SimpleArrayDictionary.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Diccionario con dos arreglos paralelos: <code>keys[]</code> y <code>values[]</code>. El indice i de <code>keys</code> siempre corresponde al indice i de <code>values</code>.
+      <br><br>
+      <strong>remove — mismo truco que Set:</strong> Pisa la posicion eliminada con el ultimo par y reduce size. O(1) despues de encontrar el indice.
+      <br><br>
+      <strong>put — actualizacion in-place:</strong> Si la clave ya existe, actualiza el <code>values[index]</code> directamente sin mover nada. Si es nueva, agrega al final de ambos arreglos.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-linked">SimpleLinkedDictionary.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Diccionario con lista <strong>simplemente enlazada</strong> (solo <code>next</code>, no <code>prev</code>). Los nuevos pares se insertan al frente en O(1). La busqueda siempre es O(n) en el peor caso.
+      <br><br>
+      <strong>remove — patron del nodo anterior:</strong> Como es simplemente enlazada, para eliminar un nodo necesita tener referencia al nodo ANTERIOR (para actualizar su <code>next</code>). Por eso recorre manteniendo <code>current.next</code> como el candidato a eliminar.
+      <br><br>
+      <strong>Usado en AuthService:</strong> <code>SimpleLinkedDictionary&lt;String, User&gt;</code> — la clave es el username (String) y el valor es el objeto User completo.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-linked">SimpleDictionaryNode.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Nodo especifico para el diccionario enlazado. Tiene tres campos: <code>K key</code>, <code>V value</code> y <code>SimpleDictionaryNode&lt;K,V&gt; next</code>. Es simplemente enlazado (no tiene <code>prev</code>) porque el diccionario no necesita navegacion bidireccional.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-app">DictionaryExercise.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Ejercicio interactivo con 8 fases. Permite probar todas las operaciones del diccionario con pares <code>String → String</code>. <code>putLogic()</code> detecta si fue una insercion nueva o una actualizacion y muestra el valor anterior cuando corresponde. <code>formatArray()</code> formatea cualquier arreglo de objetos entre llaves con comas.
+    </div>
+  </div>
+
+  <!-- EMAIL MODULE -->
+  <h3 style="margin-top:40px">📁 emailModule/ — TP6</h3>
+  <p style="color:var(--muted);font-size:14px;margin-bottom:16px">Aplicacion real construida sobre PriorityQueue. Simula un cliente de email con bandeja de entrada y clasificacion por pestanas.</p>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-app">Email.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Modelo de datos del email. Tiene tres campos: <code>subject</code> (final — no cambia), <code>priority</code> (final — ALTO o BAJO), y <code>tab</code> (puede ser null hasta que se clasifica). El metodo <code>assignTab(tab)</code> es la unica mutacion posible — representa el momento en que el email es movido a una pestana.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-app">Priority.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Enum con dos valores: <code>ALTO(1)</code> y <code>BAJO(2)</code>. El numero entre parentesis se almacena como campo <code>numericValue</code> y se pasa a la PriorityQueue. Como numero menor = mayor prioridad en este proyecto, ALTO=1 sale antes que BAJO=2.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-app">Tab.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Enum con tres pestanas: <code>PRINCIPAL</code>, <code>NOTIFICACIONES</code>, <code>SPAM</code>. Cada una tiene un <code>displayName</code> para mostrar en la UI. El <code>EmailSystem</code> usa este enum como parametro para saber a que cola operar — el metodo <code>getQueueForTab(tab)</code> hace el switch.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-app">EmailSystem.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> El nucleo de la aplicacion. Tiene 4 <code>SimpleLinkedPriorityQueue&lt;Email&gt;</code>: una para inbox y una por cada pestana. Encapsula toda la logica de negocio.
+      <br><br>
+      <strong>receiveEmail:</strong> Encola en inbox usando <code>email.getPriority().getNumericValue()</code> como prioridad.
+      <br><br>
+      <strong>classifyTopInboxEmail:</strong> Hace dequeue de inbox (el de mayor prioridad) y enqueue en la cola de la pestana elegida.
+      <br><br>
+      <strong>listQueue (privado):</strong> Para mostrar sin destruir — vacia la cola en un arreglo y en una temporal, devuelve el arreglo, y restaura la cola original desde la temporal. Ver seccion de Email para el codigo detallado.
+      <br><br>
+      <strong>getQueueForTab (privado):</strong> Switch sobre <code>Tab</code> que devuelve la cola correcta. Centraliza la logica de "que cola corresponde a que pestana" en un solo lugar.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-app">EmailExercise.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Interfaz de usuario del sistema de email. Tiene 7 fases. <code>selectedTab</code> guarda la pestana activa entre fases. <code>readPriority()</code> y <code>readTab()</code> son helpers de input con loop infinito hasta recibir un input valido.
+      <br><br>
+      <strong>printStatus():</strong> Muestra el conteo de emails en cada bandeja en todo momento para que el usuario sepa el estado del sistema.
+    </div>
+  </div>
+
+  <!-- AUTH MODULE -->
+  <h3 style="margin-top:40px">📁 authModule/ — TP7</h3>
+  <p style="color:var(--muted);font-size:14px;margin-bottom:16px">Aplicacion real construida sobre Dictionary. Sistema de autenticacion con bloqueo por intentos fallidos.</p>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-app">User.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Modelo de datos de un usuario. Campos: <code>username</code> (final), <code>password</code>, <code>failedAttempts</code>, <code>blocked</code>.
+      <br><br>
+      <strong>Constante MAX_FAILED_ATTEMPTS = 3:</strong> Si <code>failedAttempts</code> llega a 3, <code>blocked</code> se pone en true permanentemente. No hay metodo de desbloqueo — es una decision de diseño del TP.
+      <br><br>
+      <strong>resetFailedAttempts():</strong> Solo se llama desde <code>AuthService.login()</code> cuando el login es exitoso. Reinicia el contador pero NO puede desbloquear una cuenta ya bloqueada (porque <code>blocked</code> es un campo separado).
+      <br><br>
+      <strong>getRemainingAttempts():</strong> Devuelve <code>MAX_FAILED_ATTEMPTS - failedAttempts</code>. Usado en el mensaje de error para informar al usuario cuantos intentos le quedan.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-app">AuthService.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> Capa de negocio del sistema de auth. Usa <code>SimpleLinkedDictionary&lt;String, User&gt;</code> como base de datos en memoria — la clave es el username.
+      <br><br>
+      <strong>Enums de resultado:</strong> <code>RegisterResult</code> tiene 3 valores, <code>LoginResult</code> tiene 5. Esto es mas robusto que lanzar excepciones porque el caller puede manejar cada caso explicitamente en un switch.
+      <br><br>
+      <strong>Flujo de login:</strong> (1) valida inputs no vacios, (2) verifica que el usuario exista, (3) verifica si esta bloqueado, (4) compara password — si falla registra el intento y verifica si se bloqueo en ese momento, (5) si todo ok resetea contador y devuelve SUCCESS.
+      <br><br>
+      <strong>isBlank():</strong> Helper privado que verifica null Y string vacio con trim. Cubre casos como username = "   " (solo espacios).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-app">AuthExercise.java</span>
+    </div>
+    <div class="card-body">
+      <strong>Que hace:</strong> UI del sistema de auth. 4 fases: menu, register, login, loggedIn. <code>currentUser</code> guarda el username del usuario autenticado.
+      <br><br>
+      <strong>loggedInLogic():</strong> Cuando el usuario esta logueado, solo muestra su nombre y espera ENTER para hacer logout. Limpia <code>currentUser</code> y vuelve al menu.
+      <br><br>
+      <strong>readNonBlank():</strong> Helper que muestra un prompt y repite hasta recibir un string no vacio. Centraliza la validacion de inputs obligatorios.
+    </div>
+  </div>
+</section>
+
+<!-- CUANDO USAR -->
+<section id="cuando-usar">
+  <h2>Cuando usar cada TDA — guia practica</h2>
+  <p>La pregunta clave no es "como funciona" sino <strong>"para que situacion es la herramienta correcta"</strong>. Aca va la guia.</p>
+
+  <!-- ARRAY VS LINKED -->
+  <h3>Array vs Linked — elegir la implementacion</h3>
+  <p>Antes de elegir el TDA, tenes que elegir la implementacion. Esta tabla resume todo:</p>
+
+  <table>
+    <tr>
+      <th>Criterio</th>
+      <th>Array</th>
+      <th>Linked</th>
+    </tr>
+    <tr>
+      <td><strong>Acceso por indice</strong> (get, set)</td>
+      <td><span style="color:var(--accent3)">O(1) — directo</span></td>
+      <td><span style="color:var(--accent5)">O(n) — hay que recorrer</span></td>
+    </tr>
+    <tr>
+      <td><strong>Insertar/eliminar al final</strong></td>
+      <td><span style="color:var(--accent3)">O(1) amortizado</span></td>
+      <td><span style="color:var(--accent3)">O(1) — tiene puntero a last</span></td>
+    </tr>
+    <tr>
+      <td><strong>Insertar/eliminar al inicio o en medio</strong></td>
+      <td><span style="color:var(--accent5)">O(n) — corre elementos</span></td>
+      <td><span style="color:var(--accent3)">O(1) una vez encontrado el nodo</span></td>
+    </tr>
+    <tr>
+      <td><strong>Uso de memoria</strong></td>
+      <td>Puede tener espacio reservado sin usar</td>
+      <td>Solo ocupa lo que usa (pero cada nodo tiene overhead de punteros)</td>
+    </tr>
+    <tr>
+      <td><strong>Cache performance</strong></td>
+      <td><span style="color:var(--accent3)">Mejor — datos contiguos en memoria</span></td>
+      <td><span style="color:var(--accent5)">Peor — nodos dispersos en el heap</span></td>
+    </tr>
+    <tr>
+      <td><strong>Resize necesario</strong></td>
+      <td>Si, cuando se llena</td>
+      <td>No, crece de a un nodo</td>
+    </tr>
+  </table>
+
+  <div class="compare" style="margin-top:20px">
+    <div class="compare-card">
+      <h4>Usa Array cuando...</h4>
+      <ul>
+        <li>Acces frecuente por indice (<strong>buscar elemento N</strong>)</li>
+        <li>Mayoria de operaciones son al final</li>
+        <li>El tamaño es relativamente estable o conocido</li>
+        <li>Ejemplo: <strong>historial de navegacion</strong> donde mostrás los ultimos 10</li>
+        <li>Ejemplo: <strong>carrito de compras</strong> donde accedés por posicion</li>
+      </ul>
+    </div>
+    <div class="compare-card">
+      <h4>Usa Linked cuando...</h4>
+      <ul>
+        <li>Muchas inserciones y eliminaciones en el medio</li>
+        <li>No necesitas acceso por indice</li>
+        <li>El tamaño varia mucho e impredeciblemente</li>
+        <li>Ejemplo: <strong>editor de texto</strong> donde insertás caracteres en cualquier lugar</li>
+        <li>Ejemplo: <strong>playlist de musica</strong> donde reorganizas canciones constantemente</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- STACK -->
+  <h3 style="margin-top:36px">Stack — cuando el ultimo que llego es el primero</h3>
+  <div class="callout callout-info">
+    <span class="callout-title">Regla de oro: usas Stack cuando el procesamiento debe revertirse</span>
+    <p>Si la solucion implica "deshacer lo ultimo que hice", estas pensando en Stack.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">↩️</span><span class="card-title" style="margin-left:8px">Ctrl+Z (deshacer)</span></div>
+      <div class="card-body">Cada accion se hace <code>push</code> en la pila de historial. Al deshacer, se hace <code>pop</code> — siempre se revierte la ultima accion. <strong>No tiene sentido deshacer acciones viejas sin deshacer las nuevas primero.</strong></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">🔙</span><span class="card-title" style="margin-left:8px">Boton Atras del navegador</span></div>
+      <div class="card-body">Cada pagina visitada se apila. "Atras" hace pop. Si navegas A→B→C y das atras, vas a B (no a A). Es exactamente LIFO.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">📐</span><span class="card-title" style="margin-left:8px">Verificar parentesis balanceados</span></div>
+      <div class="card-body">Al leer <code>(</code> hacés push. Al leer <code>)</code> hacés pop y verificas que matchee. Si la pila queda vacia al final, estaba balanceado. Ejemplo clasico de Stack en algoritmos.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">📞</span><span class="card-title" style="margin-left:8px">Call Stack del programa</span></div>
+      <div class="card-body">Cuando <code>main()</code> llama a <code>run()</code> que llama a <code>exerciseLogic()</code>, la JVM usa una pila de llamadas. Al terminar <code>exerciseLogic</code>, vuelve a <code>run</code>. La JVM usa Stack internamente.</div>
+    </div>
+  </div>
+
+  <!-- QUEUE -->
+  <h3 style="margin-top:36px">Queue — cuando el orden de llegada importa</h3>
+  <div class="callout callout-info">
+    <span class="callout-title">Regla de oro: usas Queue cuando la equidad importa</span>
+    <p>Si todos tienen que esperar su turno y el primero en llegar es el primero en ser atendido, usas Queue.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">🖨️</span><span class="card-title" style="margin-left:8px">Cola de impresion</span></div>
+      <div class="card-body">Los documentos se encolan en el orden que se mandan a imprimir. La impresora los procesa en orden FIFO. <strong>No tiene sentido que el ultimo en mandar imprima primero.</strong></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">🎮</span><span class="card-title" style="margin-left:8px">Matchmaking en un videojuego</span></div>
+      <div class="card-body">Los jugadores esperan en una cola. El servidor toma de a grupos del frente para armar partidas. Quien llego antes, juega antes.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">🌐</span><span class="card-title" style="margin-left:8px">Requests HTTP en un servidor</span></div>
+      <div class="card-body">Cuando el servidor esta ocupado, los requests entrantes esperan en una cola. Se procesan en orden de llegada. Si usaras Stack, el ultimo request en llegar siempre se procesaria primero — injusto.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">📨</span><span class="card-title" style="margin-left:8px">BFS (Busqueda en amplitud)</span></div>
+      <div class="card-body">El algoritmo de busqueda BFS en grafos usa Queue explicitamente. Procesa todos los nodos a distancia 1 antes de los de distancia 2. La Queue garantiza ese orden de nivel por nivel.</div>
+    </div>
+  </div>
+
+  <!-- PRIORITY QUEUE -->
+  <h3 style="margin-top:36px">Priority Queue — cuando el orden de llegada NO importa, importa la urgencia</h3>
+  <div class="callout callout-warn">
+    <span class="callout-title">Regla de oro: usas PriorityQueue cuando hay urgencia diferente entre elementos</span>
+    <p>La diferencia con Queue: en una sala de espera normal, vas por orden de llegada. En urgencias del hospital, el que llego segundo pero tiene un infarto va primero. Eso es Priority Queue.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">🏥</span><span class="card-title" style="margin-left:8px">Sistema de triaje hospitalario</span></div>
+      <div class="card-body">Los pacientes se atienden por gravedad, no por orden de llegada. Un paciente con prioridad CRITICA (1) va antes que uno con prioridad LEVE (5), sin importar cuando llegaron. Exactamente como el EmailSystem del TP6.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">💻</span><span class="card-title" style="margin-left:8px">Scheduler del sistema operativo</span></div>
+      <div class="card-body">El OS asigna CPU a procesos segun su prioridad. Un proceso del sistema operativo tiene mayor prioridad que una app del usuario. La Priority Queue decide quien corre primero.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">🗺️</span><span class="card-title" style="margin-left:8px">Algoritmo de Dijkstra</span></div>
+      <div class="card-body">El famoso algoritmo de caminos minimos en grafos usa Priority Queue para siempre procesar el nodo mas cercano primero. Sin PQ, el algoritmo no funciona correctamente.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">📧</span><span class="card-title" style="margin-left:8px">Email System — TP6</span></div>
+      <div class="card-body">Los emails ALTO prioridad aparecen primero aunque llegaron despues. Al clasificar, siempre se toma el mas urgente del inbox. Uso directo de PQ en el proyecto.</div>
+    </div>
+  </div>
+
+  <!-- SET -->
+  <h3 style="margin-top:36px">Set — cuando lo que importa es si algo esta o no, no el orden ni la cantidad</h3>
+  <div class="callout callout-info">
+    <span class="callout-title">Regla de oro: usas Set cuando los duplicados son un error o no tienen sentido</span>
+    <p>Si agregar el mismo elemento dos veces no tiene significado logico, usas Set. El Set rechaza el duplicado automaticamente.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">🏷️</span><span class="card-title" style="margin-left:8px">Tags o etiquetas de un post</span></div>
+      <div class="card-body">Un post no puede tener la etiqueta "java" dos veces. Cuando el usuario intenta agregar una etiqueta duplicada, el Set devuelve false silenciosamente. Las operaciones de conjunto sirven para: "que posts comparten las mismas etiquetas" (interseccion).</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">👥</span><span class="card-title" style="margin-left:8px">Amigos en comun</span></div>
+      <div class="card-body">Los amigos de A y los amigos de B son Sets. La interseccion de ambos da los amigos en comun. Facebook/Instagram hace exactamente esto con sets para la feature "personas que quizas conozcas".</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">🔡</span><span class="card-title" style="margin-left:8px">Caracteres unicos de un texto</span></div>
+      <div class="card-body">Si queres saber cuantos caracteres distintos tiene una palabra, pones cada letra en un Set. Duplicados se ignoran automaticamente. Al final, <code>size()</code> te da la respuesta.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">🚫</span><span class="card-title" style="margin-left:8px">Lista negra / whitelist</span></div>
+      <div class="card-body">IPs bloqueadas, palabras prohibidas, usuarios baneados. Lo unico que importa es si el elemento <strong>esta o no esta</strong> — <code>contains()</code> es la operacion principal. El orden es irrelevante.</div>
+    </div>
+  </div>
+
+  <!-- DICTIONARY -->
+  <h3 style="margin-top:36px">Dictionary — cuando cada cosa tiene un "significado" o "valor" asociado</h3>
+  <div class="callout callout-info">
+    <span class="callout-title">Regla de oro: usas Dictionary cuando necesitas lookup por nombre/clave</span>
+    <p>Si te encontras escribiendo "dame el elemento cuyo nombre/id es X", eso es Dictionary. Las listas no tienen "nombre" — tienen indice numerico.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">🔐</span><span class="card-title" style="margin-left:8px">Sistema de login — TP7</span></div>
+      <div class="card-body"><code>users.get("juan")</code> devuelve el objeto User de juan directamente. Si usaras una lista, tendrias que recorrer todos los usuarios buscando el que tiene <code>username.equals("juan")</code> — logicamente es lo mismo pero el Dictionary expresa la intencion mas claramente.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">🌍</span><span class="card-title" style="margin-left:8px">Traductor / diccionario de idiomas</span></div>
+      <div class="card-body"><code>dict.get("hello")</code> → <code>"hola"</code>. La clave es la palabra en ingles, el valor es la traduccion. Nadie guarda un diccionario de idiomas en una lista — es semanticamente un mapa clave-valor.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">📊</span><span class="card-title" style="margin-left:8px">Contador de frecuencias</span></div>
+      <div class="card-body">Contar cuantas veces aparece cada palabra en un texto: la clave es la palabra, el valor es el contador. <code>dict.put("hola", dict.get("hola") + 1)</code>. Sin Dictionary, tendrias que buscar en listas paralelas.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span style="font-size:20px">⚙️</span><span class="card-title" style="margin-left:8px">Configuracion de una app</span></div>
+      <div class="card-body"><code>config.get("max_intentos")</code> → <code>"3"</code>. Los archivos .properties, los JSON de configuracion, las variables de entorno — todos son diccionarios. La clave identifica el parametro, el valor es su contenido.</div>
+    </div>
+  </div>
+
+  <!-- RESUMEN FINAL -->
+  <h3 style="margin-top:36px">Tabla de decision rapida</h3>
+  <table>
+    <tr>
+      <th>Necesito...</th>
+      <th>Usaria...</th>
+      <th>Por que</th>
+    </tr>
+    <tr>
+      <td>Guardar elementos en orden y acceder por posicion</td>
+      <td><strong>List</strong></td>
+      <td>Unico TDA con acceso por indice</td>
+    </tr>
+    <tr>
+      <td>Deshacer acciones / historial / recursion manual</td>
+      <td><strong>Stack</strong></td>
+      <td>LIFO — el ultimo en entrar es el primero en salir</td>
+    </tr>
+    <tr>
+      <td>Procesar tareas en orden de llegada</td>
+      <td><strong>Queue</strong></td>
+      <td>FIFO — equidad, orden de llegada</td>
+    </tr>
+    <tr>
+      <td>Procesar tareas segun urgencia</td>
+      <td><strong>Priority Queue</strong></td>
+      <td>El mas urgente siempre sale primero</td>
+    </tr>
+    <tr>
+      <td>Verificar si algo pertenece a un grupo / sin duplicados</td>
+      <td><strong>Set</strong></td>
+      <td>Operacion contains rapida, duplicados imposibles</td>
+    </tr>
+    <tr>
+      <td>Buscar algo por nombre o clave unica</td>
+      <td><strong>Dictionary</strong></td>
+      <td>Lookup semantico por clave, no por posicion</td>
+    </tr>
+    <tr>
+      <td>Lo anterior pero con acceso rapido por indice</td>
+      <td><strong>Array impl</strong></td>
+      <td>get O(1) vs get O(n) de Linked</td>
+    </tr>
+    <tr>
+      <td>Lo anterior pero con muchas inserciones en el medio</td>
+      <td><strong>Linked impl</strong></td>
+      <td>Insercion O(1) vs O(n) de Array</td>
+    </tr>
+    <tr>
+      <td>Cola con dequeue O(1)</td>
+      <td><strong>LinkedQueue</strong></td>
+      <td>ArrayQueue hace dequeue en O(n) porque corre todo</td>
+    </tr>
+  </table>
+
+  <div class="callout callout-success" style="margin-top:24px">
+    <span class="callout-title">La regla mas importante</span>
+    <p>No existe "el mejor TDA". Existe <strong>el TDA correcto para el problema</strong>. Antes de escribir codigo, preguntate: ¿necesito orden? ¿necesito duplicados? ¿necesito buscar por nombre? ¿quien debe salir primero? Las respuestas te dicen que estructura usar.</p>
+  </div>
 </section>
 
 <!-- FOOTER -->
