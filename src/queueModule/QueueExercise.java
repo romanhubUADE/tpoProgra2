@@ -55,7 +55,13 @@ public class QueueExercise extends Exercise {
 
     private void enqueueLogic() {
         System.out.println("\nEnter a String to enqueue:");
-        queue.enqueue(scanner.nextLine());
+        String value = scanner.nextLine().trim();
+        if (value.isEmpty()) {
+            System.out.println("Value cannot be empty.");
+            currentPhase = 0;
+            return;
+        }
+        queue.enqueue(value);
         printStatus();
 
         boolean validInput = false;

@@ -59,7 +59,12 @@ public class PriorityQueueExercise extends Exercise {
 
     private void enqueueLogic() {
         System.out.println("\nEnter a String to enqueue:");
-        String value = scanner.nextLine();
+        String value = scanner.nextLine().trim();
+        if (value.isEmpty()) {
+            System.out.println("Value cannot be empty.");
+            currentPhase = 0;
+            return;
+        }
 
         int priority = readPriority();
         queue.enqueue(value, priority);

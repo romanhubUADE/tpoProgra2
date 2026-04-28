@@ -64,9 +64,19 @@ public class DictionaryExercise extends Exercise {
 
     private void putLogic() {
         System.out.println("\nEnter a key:");
-        String key = scanner.nextLine();
+        String key = scanner.nextLine().trim();
+        if (key.isEmpty()) {
+            System.out.println("Key cannot be empty.");
+            currentPhase = 0;
+            return;
+        }
         System.out.println("Enter a value:");
-        String value = scanner.nextLine();
+        String value = scanner.nextLine().trim();
+        if (value.isEmpty()) {
+            System.out.println("Value cannot be empty.");
+            currentPhase = 0;
+            return;
+        }
 
         String previous = dictionary.put(key, value);
         if (previous == null) {

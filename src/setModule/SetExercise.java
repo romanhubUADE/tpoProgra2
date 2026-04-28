@@ -112,7 +112,12 @@ public class SetExercise extends Exercise {
 
     private void addLogic() {
         System.out.println("\nEnter a String to add into Set " + selectedSetName + ":");
-        String value = scanner.nextLine();
+        String value = scanner.nextLine().trim();
+        if (value.isEmpty()) {
+            System.out.println("Value cannot be empty.");
+            currentPhase = 1;
+            return;
+        }
         boolean added = selectedSet.add(value);
 
         if (added) {

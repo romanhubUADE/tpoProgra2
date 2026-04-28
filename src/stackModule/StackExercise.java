@@ -55,7 +55,13 @@ public class StackExercise extends Exercise {
 
     private void pushLogic() {
         System.out.println("\nEnter a String to push:");
-        stack.push(scanner.nextLine());
+        String value = scanner.nextLine().trim();
+        if (value.isEmpty()) {
+            System.out.println("Value cannot be empty.");
+            currentPhase = 0;
+            return;
+        }
+        stack.push(value);
         printStatus();
 
         boolean validInput = false;
