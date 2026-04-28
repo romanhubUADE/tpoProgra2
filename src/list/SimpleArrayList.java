@@ -26,9 +26,14 @@ public class SimpleArrayList<E> implements SimpleList<E> {
 
     @Override
     public boolean add(E element) {
+<<<<<<< Updated upstream:src/list/SimpleArrayList.java
         if (size == elements.length) {
             resize();
         }
+=======
+        if (element == null) throw new IllegalArgumentException("element cannot be null");
+        validateSize(size + 1);
+>>>>>>> Stashed changes:src/listModule/SimpleArrayList.java
         elements[size] = element;
         size++;
         return true;
@@ -36,6 +41,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
 
     @Override
     public void add(int index, E element) {
+<<<<<<< Updated upstream:src/list/SimpleArrayList.java
         if (index == size) {
             add(element);
             return;
@@ -48,6 +54,12 @@ public class SimpleArrayList<E> implements SimpleList<E> {
         }
 
         // mover a la derecha
+=======
+        if (element == null) throw new IllegalArgumentException("element cannot be null");
+        validateInsertIndex(index);
+        validateSize(size + 1);
+        // Correr elementos a la derecha desde el final hasta index
+>>>>>>> Stashed changes:src/listModule/SimpleArrayList.java
         for (int i = size; i > index; i--) {
             elements[i] = elements[i - 1];
         }
@@ -75,6 +87,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
 
     @Override
     public boolean remove(Object object) {
+        if (object == null) return false;
         for (int i = 0; i < size; i++) {
             if ((object == null && elements[i] == null) ||
                     (object != null && object.equals(elements[i]))) {
@@ -95,6 +108,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
 
     @Override
     public boolean contains(Object object) {
+        if (object == null) return false;
         for (int i = 0; i < size; i++) {
             if ((object == null && elements[i] == null) ||
                     (object != null && object.equals(elements[i]))) {

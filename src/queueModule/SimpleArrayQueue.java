@@ -19,10 +19,16 @@ public class SimpleArrayQueue <E> implements SimpleQueue<E>{
 
     @Override
     public void enqueue(E element) {
+<<<<<<< Updated upstream
         validateSize();
 
         elements[rear] = element;
         rear = (rear + 1) % elements.length;
+=======
+        if (element == null) throw new IllegalArgumentException("element cannot be null");
+        validateSize(size + 1);
+        elements[size] = element;
+>>>>>>> Stashed changes
         size++;
     }
 
