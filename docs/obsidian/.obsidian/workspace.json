@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "SetExercise.md",
+                "file": "ListExercise.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "SetExercise"
+              "title": "ListExercise"
             }
           }
         ]
@@ -185,11 +185,17 @@
   },
   "active": "e190a8dccd4bad3f",
   "lastOpenFiles": [
+    "00 - Mapa TDAs.md.tmp.9690.1777334192024",
+    "DictionaryExercise.md",
+    "DictionaryExercise.md.tmp.9690.1777334187526",
+    "PriorityQueueExercise.md",
+    "PriorityQueueExercise.md.tmp.9690.1777334181013",
+    "00 - Mapa TDAs.md",
+    "SetExercise.md",
     "SimpleStack.md",
     "StackExercise.md",
     "MainProgram.md",
     "QueueExercise.md",
-    "README - Obsidian.md",
-    "00 - Mapa TDAs.md"
+    "README - Obsidian.md"
   ]
 }

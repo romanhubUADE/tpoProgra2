@@ -12,12 +12,16 @@ Este vault está organizado para navegar de **visión general → detalle de imp
 - [[StackExercise]]
 - [[QueueExercise]]
 - [[SetExercise]]
+- [[PriorityQueueExercise]]
+- [[DictionaryExercise]]
 
 ## Interfaces (contratos)
 - [[SimpleList]]
 - [[SimpleStack]]
 - [[SimpleQueue]]
 - [[SimpleSet]]
+- [[SimplePriorityQueue]]
+- [[SimpleDictionary]]
 
 ## Implementaciones
 
@@ -37,6 +41,16 @@ Este vault está organizado para navegar de **visión general → detalle de imp
 ### Set
 - [[SimpleArraySet]]
 - [[SimpleLinkedSet]]
+
+### Priority Queue
+- [[SimpleArrayPriorityQueue]]
+- [[SimpleLinkedPriorityQueue]]
+- [[PriorityLinkedNode]]
+
+### Dictionary
+- [[SimpleArrayDictionary]]
+- [[SimpleLinkedDictionary]]
+- [[SimpleDictionaryNode]]
 
 ---
 

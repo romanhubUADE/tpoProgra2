@@ -5,6 +5,8 @@ import listModule.ListExercise;
 import stackModule.StackExercise;
 import queueModule.QueueExercise;
 import setModule.SetExercise;
+import priorityQueueModule.PriorityQueueExercise;
+import dictionaryModule.DictionaryExercise;
 
 public class MainProgram {
     private boolean running = true;
@@ -34,6 +36,8 @@ public class MainProgram {
             + "\n3 - Stack Exercise"
             + "\n4 - Queue Exercise"
             + "\n5 - Set Exercise"
+            + "\n6 - Priority Queue Exercise"
+            + "\n7 - Dictionary Exercise"
         );
         String userInput = scanner.nextLine();
         switch (userInput) {
@@ -54,6 +58,12 @@ public class MainProgram {
                 break;
             case "5":
                 exercise = new SetExercise(scanner);
+                break;
+            case "6":
+                exercise = new PriorityQueueExercise(scanner);
+                break;
+            case "7":
+                exercise = new DictionaryExercise(scanner);
                 break;
             default:
                 System.out.println("Invalid input, try again.");
