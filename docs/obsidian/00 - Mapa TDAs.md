@@ -14,6 +14,8 @@ Este vault está organizado para navegar de **visión general → detalle de imp
 - [[SetExercise]]
 - [[PriorityQueueExercise]]
 - [[DictionaryExercise]]
+- [[EmailExercise]] (TP6)
+- [[AuthExercise]] (TP7)
 
 ## Interfaces (contratos)
 - [[SimpleList]]
