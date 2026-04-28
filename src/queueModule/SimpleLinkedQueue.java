@@ -4,8 +4,13 @@ import java.util.NoSuchElementException;
 
 public class SimpleLinkedQueue<E> implements SimpleQueue<E> {
 
+<<<<<<< Updated upstream
     private Node<E> first;
     private Node<E> last;
+=======
+    private LinkedNode<E> first;
+    private LinkedNode<E> last;
+>>>>>>> Stashed changes
     private int size;
 
     private static class Node<E> {
@@ -19,8 +24,13 @@ public class SimpleLinkedQueue<E> implements SimpleQueue<E> {
 
     @Override
     public void enqueue(E element) {
+<<<<<<< Updated upstream
         Node<E> newNode = new Node<>(element);
 
+=======
+        if (element == null) throw new IllegalArgumentException("element cannot be null");
+        LinkedNode<E> newNode = new LinkedNode<>(element);
+>>>>>>> Stashed changes
         if (isEmpty()) {
             first = newNode;
         } else {
@@ -53,11 +63,7 @@ public class SimpleLinkedQueue<E> implements SimpleQueue<E> {
     }
 
     @Override
-    public void clear() {
-        first = null;
-        last = null;
-        size = 0;
-    }
+    public void clear() { first = null; last = null; size = 0; }
 
     @Override
     public int size() {

@@ -4,7 +4,11 @@ import java.util.NoSuchElementException;
 
 public class SimpleLinkedStack <E> implements SimpleStack<E>{
 
+<<<<<<< Updated upstream
     private Node<E> top;
+=======
+    private LinkedNode<E> last;
+>>>>>>> Stashed changes
     private int size;
 
     public static class Node<E>{
@@ -20,8 +24,19 @@ public class SimpleLinkedStack <E> implements SimpleStack<E>{
 
     @Override
     public void push(E element) {
+<<<<<<< Updated upstream
         top = new Node<>(element, top);
         size ++;
+=======
+        if (element == null) throw new IllegalArgumentException("element cannot be null");
+        LinkedNode<E> newNode = new LinkedNode<>(element);
+        if (!isEmpty()) {
+            newNode.prev = last;
+            last.next = newNode;
+        }
+        last = newNode;
+        size++;
+>>>>>>> Stashed changes
     }
 
     @Override
@@ -40,10 +55,14 @@ public class SimpleLinkedStack <E> implements SimpleStack<E>{
     }
 
     @Override
+<<<<<<< Updated upstream
     public void clear() {
         top = null;
         size = 0;
     }
+=======
+    public void clear() { last = null; size = 0; }
+>>>>>>> Stashed changes
 
     @Override
     public int size() {

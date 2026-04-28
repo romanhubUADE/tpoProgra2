@@ -13,6 +13,7 @@ public class SimpleArrayStack <E> implements SimpleStack<E>{
 
     @Override
     public void push(E element) {
+        if (element == null) throw new IllegalArgumentException("element cannot be null");
         validateSize(size + 1);
         elements[size] = element;
         size++;

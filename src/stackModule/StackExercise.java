@@ -93,11 +93,23 @@ public class StackExercise extends Exercise {
     }
 
     private void pushLogic() {
+<<<<<<< Updated upstream
         System.out.print("Enter a number to push: ");
         int value = Integer.parseInt(scanner.nextLine());
         stack.push(value);
 
         System.out.println("Elemento agregado");
+=======
+        System.out.println("\nEnter a String to push:");
+        String value = scanner.nextLine().trim();
+        if (value.isEmpty()) {
+            System.out.println("Value cannot be empty.");
+            currentPhase = 0;
+            return;
+        }
+        stack.push(value);
+        printStatus();
+>>>>>>> Stashed changes
 
         boolean validInput = false;
         while (!validInput) {
