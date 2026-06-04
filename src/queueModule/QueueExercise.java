@@ -92,23 +92,16 @@ public class QueueExercise extends Exercise {
     }
 
     private void enqueueLogic() {
-<<<<<<< Updated upstream
         System.out.print("Enter a number to enqueue: ");
-        int value = Integer.parseInt(scanner.nextLine());
-        queue.enqueue(value);
-
-        System.out.println("Elemento agregado");
-=======
-        System.out.println("\nEnter a String to enqueue:");
-        String value = scanner.nextLine().trim();
-        if (value.isEmpty()) {
-            System.out.println("Value cannot be empty.");
+        try {
+            int value = Integer.parseInt(scanner.nextLine().trim());
+            queue.enqueue(value);
+            printStatus();
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number.");
             currentPhase = 0;
             return;
         }
-        queue.enqueue(value);
-        printStatus();
->>>>>>> Stashed changes
 
         boolean validInput = false;
         while (!validInput) {

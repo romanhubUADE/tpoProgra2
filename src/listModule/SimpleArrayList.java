@@ -1,16 +1,18 @@
-package list;
+package listModule;
 
 public class SimpleArrayList<E> implements SimpleList<E> {
 
     private E[] elements;
     private int size;
 
+    @SuppressWarnings("unchecked")
     public SimpleArrayList() {
         elements = (E[]) new Object[10];
         size = 0;
     }
 
     private void resize() {
+        @SuppressWarnings("unchecked")
         E[] newArray = (E[]) new Object[elements.length * 2];
         for (int i = 0; i < size; i++) {
             newArray[i] = elements[i];
@@ -57,7 +59,6 @@ public class SimpleArrayList<E> implements SimpleList<E> {
             resize();
         }
 
-        // Move elements one position to the right.
         for (int i = size; i > index; i--) {
             elements[i] = elements[i - 1];
         }
@@ -71,15 +72,12 @@ public class SimpleArrayList<E> implements SimpleList<E> {
         validateIndex(index);
 
         E removed = elements[index];
-
-        // mover a la izquierda
         for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
         }
 
-        elements[size - 1] = null; // limpiar referencia
+        elements[size - 1] = null;
         size--;
-
         return removed;
     }
 
@@ -87,8 +85,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
     public boolean remove(Object object) {
         if (object == null) return false;
         for (int i = 0; i < size; i++) {
-            if ((object == null && elements[i] == null) ||
-                    (object != null && object.equals(elements[i]))) {
+            if (object.equals(elements[i])) {
                 remove(i);
                 return true;
             }
@@ -108,8 +105,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
     public boolean contains(Object object) {
         if (object == null) return false;
         for (int i = 0; i < size; i++) {
-            if ((object == null && elements[i] == null) ||
-                    (object != null && object.equals(elements[i]))) {
+            if (object.equals(elements[i])) {
                 return true;
             }
         }
@@ -125,10 +121,8 @@ public class SimpleArrayList<E> implements SimpleList<E> {
     @Override
     public E set(int index, E element) {
         validateIndex(index);
-
         E old = elements[index];
         elements[index] = element;
-
         return old;
     }
 
@@ -142,3 +136,4 @@ public class SimpleArrayList<E> implements SimpleList<E> {
         return size == 0;
     }
 }
+

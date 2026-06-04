@@ -1,64 +1,35 @@
 package application;
+
+import bstModule.ContactsExercise;
+import dictionaryModule.DictionaryExercise;
 import list.ListExercise;
+import priorityQueueModule.PriorityQueueExercise;
 import queueModule.QueueExercise;
+import setModule.SetExercise;
 import stackModule.StackExercise;
 
-import java.util.*;
+import java.util.Scanner;
 
 public class MainProgram {
     protected boolean running = true;
     private Exercise exercise;
 
-    public static void main (String[] args){
-            new MainProgram().run();
-
+    public static void main(String[] args) {
+        new MainProgram().run();
     }
-    private void run(){
+
+    private void run() {
         Scanner scanner = new Scanner(System.in);
-        while(running)
-        {
+        while (running) {
+            exercise = null;
             selectExercise(scanner);
-            if(exercise!=null){
+            if (exercise != null) {
                 exercise.run();
             }
         }
         scanner.close();
     }
 
-<<<<<<< Updated upstream
-    private void selectExercise(Scanner scanner){
-        System.out.println("Select an option: " +
-                "\n  0 - Terminate Program" +
-                "\n  1 - Test Exercise" +
-                "\n  2 - List Exercise" +
-                "\n  3 - Stack Exercise" +
-                "\n  4 - Queue Exercise");
-
-        String userInput= scanner.nextLine();
-
-        switch(userInput){
-            case "0":
-                System.out.println("Program terminated.");
-                running=false;
-                break;
-            case "1":
-                exercise=new TestExercise(scanner);
-                break;
-            case "2":
-                exercise=new ListExercise(scanner);
-                break;
-            case "3":
-                exercise = new StackExercise(scanner);
-                break;
-            case "4":
-                exercise = new QueueExercise(scanner);
-                break;
-            default:
-                System.out.println("Invalid input, try again.");
-                selectExercise(scanner);
-                break;
-
-=======
     private void selectExercise(Scanner scanner) {
         boolean selected = false;
         while (!selected) {
@@ -71,12 +42,13 @@ public class MainProgram {
                 + "\n5 - Set Exercise"
                 + "\n6 - Priority Queue Exercise"
                 + "\n7 - Dictionary Exercise"
-                + "\n8 - Email Exercise (TP6)"
-                + "\n9 - Auth Exercise (TP7)"
+                + "\n8 - Contacts Application (TP8)"
             );
+
             String userInput = scanner.nextLine();
             switch (userInput) {
                 case "0":
+                    System.out.println("Program terminated.");
                     running = false;
                     selected = true;
                     break;
@@ -109,18 +81,13 @@ public class MainProgram {
                     selected = true;
                     break;
                 case "8":
-                    exercise = new EmailExercise(scanner);
-                    selected = true;
-                    break;
-                case "9":
-                    exercise = new AuthExercise(scanner);
+                    exercise = new ContactsExercise(scanner);
                     selected = true;
                     break;
                 default:
                     System.out.println("Invalid input, try again.");
                     break;
             }
->>>>>>> Stashed changes
         }
     }
 }
