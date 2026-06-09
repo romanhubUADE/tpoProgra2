@@ -16,7 +16,6 @@ public class SimpleArrayList<E> implements SimpleList<E> {
         size = 0;
     }
 
-    // ── Helpers privados ─────────────────────────────────────────────────────
 
     private void validateSize(int newSize) {
         if (newSize > elements.length) {

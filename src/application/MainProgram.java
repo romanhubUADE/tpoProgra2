@@ -9,6 +9,8 @@ import priorityQueueModule.PriorityQueueExercise;
 import dictionaryModule.DictionaryExercise;
 import emailModule.EmailExercise;
 import authModule.AuthExercise;
+import graphModule.GraphExercise;
+import bstModule.ContactsExercise;
 
 public class MainProgram {
     private boolean running = true;
@@ -42,6 +44,8 @@ public class MainProgram {
             + "\n7 - Dictionary Exercise"
             + "\n8 - Email Exercise (TP6)"
             + "\n9 - Auth Exercise (TP7)"
+            + "\n10 - Graph Exercise"
+            + "\n11 - Contacts Exercise (TP8/TP9 - AVL)"
         );
         String userInput = scanner.nextLine();
         switch (userInput) {
@@ -74,6 +78,12 @@ public class MainProgram {
                 break;
             case "9":
                 exercise = new AuthExercise(scanner);
+                break;
+            case "10":
+                exercise = new GraphExercise(scanner);
+                break;
+            case "11":
+                exercise = new ContactsExercise(scanner);
                 break;
             default:
                 System.out.println("Invalid input, try again.");
