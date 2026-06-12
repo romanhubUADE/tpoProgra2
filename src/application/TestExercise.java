@@ -1,22 +1,26 @@
 package application;
-import java.util.*;
 
+import java.util.Scanner;
 
-public class TestExercise extends Exercise{
+public class TestExercise extends Exercise {
 
-    public TestExercise(Scanner scnr){
-        super(scnr);
+    public TestExercise(Scanner scanner) {
+        super(scanner);
     }
 
     @Override
-    protected void exerciseLogic(){
-        System.out.println("Welcome to the test exercise"+
-                "\nmm: Main Menu");
-
-        String userInput=scanner.nextLine().toLowerCase();
-        if (userInput.equals("mm")){
-            running =false;
+    protected void exerciseLogic() {
+        System.out.println("\nWelcome to Test Exercise."
+            + "\n0 - Back to Main Menu"
+        );
+        String userInput = scanner.nextLine();
+        switch (userInput) {
+            case "0":
+                running = false;
+                break;
+            default:
+                System.out.println("Invalid input, try again.");
+                break;
         }
     }
-
 }

@@ -1,15 +1,28 @@
-package list;
+package listModule;
 
 public class SimpleArrayList<E> implements SimpleList<E> {
 
     private E[] elements;
     private int size;
+    private static final int DEFAULT_CAPACITY = 4;
 
     public SimpleArrayList() {
-        elements = (E[]) new Object[10];
+        elements = (E[]) new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
+    public SimpleArrayList(int initialCapacity) {
+        elements = (E[]) new Object[initialCapacity];
+        size = 0;
+    }
+
+
+    private void validateSize(int newSize) {
+        if (newSize > elements.length) {
+            resize();
+        }
+    }
+    
     private void resize() {
         E[] newArray = (E[]) new Object[elements.length * 2];
         for (int i = 0; i < size; i++) {
@@ -18,22 +31,25 @@ public class SimpleArrayList<E> implements SimpleList<E> {
         elements = newArray;
     }
 
+    // Para get, set, remove(int): 0 <= index < size
     private void validateIndex(int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
 
+    // Para add(int, E): 0 <= index <= size (permite insertar al final)
+    private void validateInsertIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+    // ── Operaciones principales ───────────────────────────────────────────────
+
     @Override
     public boolean add(E element) {
-<<<<<<< Updated upstream:src/list/SimpleArrayList.java
-        if (size == elements.length) {
-            resize();
-        }
-=======
-        if (element == null) throw new IllegalArgumentException("element cannot be null");
         validateSize(size + 1);
->>>>>>> Stashed changes:src/listModule/SimpleArrayList.java
         elements[size] = element;
         size++;
         return true;
@@ -41,29 +57,12 @@ public class SimpleArrayList<E> implements SimpleList<E> {
 
     @Override
     public void add(int index, E element) {
-<<<<<<< Updated upstream:src/list/SimpleArrayList.java
-        if (index == size) {
-            add(element);
-            return;
-        }
-
-        validateIndex(index);
-
-        if (size == elements.length) {
-            resize();
-        }
-
-        // mover a la derecha
-=======
-        if (element == null) throw new IllegalArgumentException("element cannot be null");
         validateInsertIndex(index);
         validateSize(size + 1);
         // Correr elementos a la derecha desde el final hasta index
->>>>>>> Stashed changes:src/listModule/SimpleArrayList.java
         for (int i = size; i > index; i--) {
             elements[i] = elements[i - 1];
         }
-
         elements[index] = element;
         size++;
     }
@@ -71,26 +70,20 @@ public class SimpleArrayList<E> implements SimpleList<E> {
     @Override
     public E remove(int index) {
         validateIndex(index);
-
         E removed = elements[index];
-
-        // mover a la izquierda
+        // Correr elementos a la izquierda
         for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
         }
-
-        elements[size - 1] = null; // limpiar referencia
+        elements[size - 1] = null; // limpiar referencia colgante
         size--;
-
         return removed;
     }
 
     @Override
     public boolean remove(Object object) {
-        if (object == null) return false;
         for (int i = 0; i < size; i++) {
-            if ((object == null && elements[i] == null) ||
-                    (object != null && object.equals(elements[i]))) {
+            if (elements[i].equals(object)) {
                 remove(i);
                 return true;
             }
@@ -108,12 +101,8 @@ public class SimpleArrayList<E> implements SimpleList<E> {
 
     @Override
     public boolean contains(Object object) {
-        if (object == null) return false;
         for (int i = 0; i < size; i++) {
-            if ((object == null && elements[i] == null) ||
-                    (object != null && object.equals(elements[i]))) {
-                return true;
-            }
+            if (elements[i].equals(object)) return true;
         }
         return false;
     }
@@ -127,10 +116,8 @@ public class SimpleArrayList<E> implements SimpleList<E> {
     @Override
     public E set(int index, E element) {
         validateIndex(index);
-
         E old = elements[index];
         elements[index] = element;
-
         return old;
     }
 

@@ -1,10 +1,10 @@
 package queueModule;
 
 public interface SimpleQueue<E> {
-    public void enqueue(E element);
-    public E dequeue();
-    public E peek();
-    public void clear();
-    public int size();
-    public boolean isEmpty();
+    void enqueue(E element);
+    E dequeue();
+    E peek();
+    void clear();
+    int size();
+    boolean isEmpty();
 }

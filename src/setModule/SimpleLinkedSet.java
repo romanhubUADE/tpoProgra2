@@ -76,25 +76,34 @@ public class SimpleLinkedSet<E> implements SimpleSet<E> {
     }
 
     @Override
-    public int size() { return size; }
+    public int size() {
+        return size;
+    }
 
     @Override
-    public boolean isEmpty() { return size == 0; }
+    public boolean isEmpty() {
+        return size == 0;
+    }
 
     @Override
-    public void clear() { first = null; last = null; size = 0; }
+    public void clear() {
+        first = null;
+        last = null;
+        size = 0;
+    }
 
     @Override
-    @SuppressWarnings("unchecked")
     public E[] toArray() {
         E[] array = (E[]) new Object[size];
         LinkedNode<E> current = first;
         int index = 0;
+
         while (current != null) {
             array[index] = current.value;
             current = current.next;
             index++;
         }
+
         return array;
     }
 

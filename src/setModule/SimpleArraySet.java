@@ -29,7 +29,6 @@ public class SimpleArraySet<E> implements SimpleSet<E> {
     }
 
     private int indexOf(E element) {
-        if (element == null) return -1;
         for (int i = 0; i < size; i++) {
             if (elements[i].equals(element)) return i;
         }
@@ -38,7 +37,6 @@ public class SimpleArraySet<E> implements SimpleSet<E> {
 
     @Override
     public boolean add(E element) {
-        if (element == null) throw new IllegalArgumentException("element cannot be null");
         if (contains(element)) return false;
         validateSize(size + 1);
         elements[size] = element;
@@ -48,7 +46,6 @@ public class SimpleArraySet<E> implements SimpleSet<E> {
 
     @Override
     public boolean remove(E element) {
-        if (element == null) return false;
         int index = indexOf(element);
         if (index == -1) return false;
 
@@ -60,7 +57,6 @@ public class SimpleArraySet<E> implements SimpleSet<E> {
 
     @Override
     public boolean contains(E element) {
-        if (element == null) return false;
         return indexOf(element) != -1;
     }
 

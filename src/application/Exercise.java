@@ -1,19 +1,20 @@
 package application;
-import java.util.*;
 
+import java.util.Scanner;
 
 public abstract class Exercise {
     protected boolean running = true;
     protected Scanner scanner;
 
-    public Exercise(Scanner scnr){
-        scanner=scnr;
+    public Exercise(Scanner scanner) {
+        this.scanner = scanner;
     }
 
-    public void run(){
-        while(running){
+    public void run() {
+        while (running) {
             exerciseLogic();
         }
+        running = true;
     }
 
     protected abstract void exerciseLogic();

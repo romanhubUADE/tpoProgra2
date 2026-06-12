@@ -32,10 +32,14 @@ public class SimpleLinkedList<E> implements SimpleList<E> {
         LinkedNode<E> current;
         if (index < size / 2) {
             current = first;
-            for (int i = 0; i < index; i++) current = current.next;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
         } else {
             current = last;
-            for (int i = size - 1; i > index; i--) current = current.prev;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
         }
         return current;
     }
@@ -62,7 +66,6 @@ public class SimpleLinkedList<E> implements SimpleList<E> {
 
     @Override
     public boolean add(E element) {
-        if (element == null) throw new IllegalArgumentException("element cannot be null");
         LinkedNode<E> newNode = new LinkedNode<>(element);
         if (isEmpty()) {
             first = newNode;
@@ -78,15 +81,23 @@ public class SimpleLinkedList<E> implements SimpleList<E> {
 
     @Override
     public void add(int index, E element) {
-        if (element == null) throw new IllegalArgumentException("element cannot be null");
         validateInsertIndex(index);
-        if (index == size) { add(element); return; }
+        if (index == size) {
+            add(element);
+            return;
+        }
         LinkedNode<E> current = getNodeByIndex(index);
         LinkedNode<E> newNode = new LinkedNode<>(element);
+
+        // Asignar prev y next del nuevo nodo ANTES de modificar los existentes
         newNode.prev = current.prev;
         newNode.next = current;
-        if (current.prev != null) current.prev.next = newNode;
-        else first = newNode;
+
+        if (current.prev != null) {
+            current.prev.next = newNode;
+        } else {
+            first = newNode;
+        }
         current.prev = newNode;
         size++;
     }
@@ -101,21 +112,26 @@ public class SimpleLinkedList<E> implements SimpleList<E> {
 
     @Override
     public boolean remove(Object object) {
-        if (object == null) return false;
         LinkedNode<E> current = first;
-        while (current != null) {
-            if (current.value.equals(object)) { removeAndReconnect(current); return true; }
+        while (current != null) { // != null, no equals — null no puede ejecutar métodos
+            if (current.value.equals(object)) {
+                removeAndReconnect(current);
+                return true;
+            }
             current = current.next;
         }
         return false;
     }
 
     @Override
-    public void clear() { first = null; last = null; size = 0; }
+    public void clear() {
+        first = null;
+        last = null;
+        size = 0;
+    }
 
     @Override
     public boolean contains(Object object) {
-        if (object == null) return false;
         LinkedNode<E> current = first;
         while (current != null) {
             if (current.value.equals(object)) return true;
@@ -125,7 +141,9 @@ public class SimpleLinkedList<E> implements SimpleList<E> {
     }
 
     @Override
-    public E get(int index) { return getNodeByIndex(index).value; }
+    public E get(int index) {
+        return getNodeByIndex(index).value;
+    }
 
     @Override
     public E set(int index, E element) {
@@ -136,8 +154,12 @@ public class SimpleLinkedList<E> implements SimpleList<E> {
     }
 
     @Override
-    public int size() { return size; }
+    public int size() {
+        return size;
+    }
 
     @Override
-    public boolean isEmpty() { return size == 0; }
+    public boolean isEmpty() {
+        return size == 0;
+    }
 }

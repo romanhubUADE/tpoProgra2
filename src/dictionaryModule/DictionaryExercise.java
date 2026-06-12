@@ -2,6 +2,7 @@ package dictionaryModule;
 
 import application.Exercise;
 import java.util.Scanner;
+import listModule.SimpleList;
 
 public class DictionaryExercise extends Exercise {
     private int currentPhase = 0;
@@ -105,12 +106,7 @@ public class DictionaryExercise extends Exercise {
         }
 
         System.out.println("\nEnter a key:");
-        String key = scanner.nextLine().trim();
-        if (key.isEmpty()) {
-            System.out.println("Key cannot be empty.");
-            currentPhase = 0;
-            return;
-        }
+        String key = scanner.nextLine();
         String value = dictionary.get(key);
 
         if (value == null) {
@@ -129,12 +125,7 @@ public class DictionaryExercise extends Exercise {
         }
 
         System.out.println("\nEnter a key to remove:");
-        String key = scanner.nextLine().trim();
-        if (key.isEmpty()) {
-            System.out.println("Key cannot be empty.");
-            currentPhase = 0;
-            return;
-        }
+        String key = scanner.nextLine();
         boolean removed = dictionary.remove(key);
 
         if (removed) {
@@ -157,18 +148,13 @@ public class DictionaryExercise extends Exercise {
 
     private void containsKeyLogic() {
         System.out.println("\nEnter a key:");
-        String key = scanner.nextLine().trim();
-        if (key.isEmpty()) {
-            System.out.println("Key cannot be empty.");
-            currentPhase = 0;
-            return;
-        }
+        String key = scanner.nextLine();
         System.out.println(dictionary.containsKey(key) ? "Key exists." : "Key not found.");
         currentPhase = 0;
     }
 
     private void keysLogic() {
-        System.out.println("\nKeys: " + formatArray(dictionary.keys()));
+        System.out.println("\nKeys: " + formatList(dictionary.keys()));
         currentPhase = 0;
     }
 
@@ -196,6 +182,16 @@ public class DictionaryExercise extends Exercise {
         for (int i = 0; i < array.length; i++) {
             result += array[i];
             if (i < array.length - 1) result += ", ";
+        }
+        result += "}";
+        return result;
+    }
+
+    private String formatList(SimpleList<?> list) {
+        String result = "{";
+        for (int i = 0; i < list.size(); i++) {
+            result += list.get(i);
+            if (i < list.size() - 1) result += ", ";
         }
         result += "}";
         return result;

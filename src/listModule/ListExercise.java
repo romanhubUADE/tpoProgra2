@@ -56,13 +56,13 @@ public class ListExercise extends Exercise {
 
     private void addLogic() {
         System.out.println("\nEnter a String to add:");
-        String element = scanner.nextLine().trim();
-        if (element.isEmpty()) {
+        String value = scanner.nextLine().trim();
+        if (value.isEmpty()) {
             System.out.println("Value cannot be empty.");
             currentPhase = 0;
             return;
         }
-        list.add(element);
+        list.add(value);
         printList();
 
         boolean validInput = false;

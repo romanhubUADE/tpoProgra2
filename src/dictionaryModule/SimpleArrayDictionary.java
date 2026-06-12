@@ -1,5 +1,8 @@
 package dictionaryModule;
 
+import listModule.SimpleLinkedList;
+import listModule.SimpleList;
+
 public class SimpleArrayDictionary<K, V> implements SimpleDictionary<K, V> {
 
     private K[] keys;
@@ -39,10 +42,8 @@ public class SimpleArrayDictionary<K, V> implements SimpleDictionary<K, V> {
 
     @Override
     public V put(K key, V value) {
-        if (key == null) throw new IllegalArgumentException("key cannot be null");
-        if (key instanceof String && ((String) key).isBlank()) throw new IllegalArgumentException("key cannot be blank");
-        if (value == null) throw new IllegalArgumentException("value cannot be null");
-        if (value instanceof String && ((String) value).isBlank()) throw new IllegalArgumentException("value cannot be blank");
+        if (key == null) throw new NullPointerException("key cannot be null");
+       // if (value == null) throw new NullPointerException("value cannot be null");
 
         int index = indexOf(key);
         if (index != -1) {
@@ -60,8 +61,7 @@ public class SimpleArrayDictionary<K, V> implements SimpleDictionary<K, V> {
 
     @Override
     public boolean remove(K key) {
-        if (key == null) throw new IllegalArgumentException("key cannot be null");
-        if (key instanceof String && ((String) key).isBlank()) throw new IllegalArgumentException("key cannot be blank");
+        if (key == null) throw new NullPointerException("key cannot be null");
         int index = indexOf(key);
         if (index == -1) return false;
 
@@ -75,30 +75,26 @@ public class SimpleArrayDictionary<K, V> implements SimpleDictionary<K, V> {
 
     @Override
     public boolean containsKey(K key) {
-        if (key == null) throw new IllegalArgumentException("key cannot be null");
-        if (key instanceof String && ((String) key).isBlank()) throw new IllegalArgumentException("key cannot be blank");
+        if (key == null) throw new NullPointerException("key cannot be null");
         return indexOf(key) != -1;
     }
 
     @Override
     public V get(K key) {
-        if (key == null) throw new IllegalArgumentException("key cannot be null");
-        if (key instanceof String && ((String) key).isBlank()) throw new IllegalArgumentException("key cannot be blank");
+        if (key == null) throw new NullPointerException("key cannot be null");
         int index = indexOf(key);
         if (index == -1) return null;
         return values[index];
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public K[] keys() {
-        K[] result = (K[]) new Object[size];
-        for (int i = 0; i < size; i++) result[i] = keys[i];
+    public SimpleList<K> keys() {
+        SimpleList<K> result = new SimpleLinkedList<K>();
+        for (int i = 0; i < size; i++) result.add(keys[i]);
         return result;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public V[] values() {
         V[] result = (V[]) new Object[size];
         for (int i = 0; i < size; i++) result[i] = values[i];

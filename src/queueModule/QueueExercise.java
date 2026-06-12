@@ -1,104 +1,59 @@
 package queueModule;
 
 import application.Exercise;
-
 import java.util.Scanner;
 
 public class QueueExercise extends Exercise {
-
     private int currentPhase = 0;
     private boolean firstTime = true;
-    private SimpleQueue<Integer> queue;
+    private SimpleQueue<String> queue;
 
-    public QueueExercise(Scanner scnr) {
-        super(scnr);
-        queue = new SimpleArrayQueue<>();
-        // queue = new SimpleLinkedQueue<>(); // para probar implementación con nodos
+    public QueueExercise(Scanner scanner) {
+        super(scanner);
+        queue = new SimpleArrayQueue<>(); // cambiar por SimpleLinkedQueue o SimpleArrayQueue para comparar
     }
 
     @Override
     protected void exerciseLogic() {
         switch (currentPhase) {
-            case 0:
-                menuLogic();
-                break;
-            case 1:
-                enqueueLogic();
-                break;
-            case 2:
-                dequeueLogic();
-                break;
-            case 3:
-                peekLogic();
-                break;
-            case 4:
-                clearLogic();
-                break;
+            case 0: menuLogic();    break;
+            case 1: enqueueLogic(); break;
+            case 2: dequeueLogic(); break;
+            case 3: peekLogic();    break;
+            case 4: clearLogic();   break;
         }
     }
 
     private void menuLogic() {
-
         if (firstTime) {
             firstTime = false;
-            System.out.println("\nWelcome to the Queue Exercise");
+            System.out.println("\nWelcome to the Queue Exercise.");
         } else {
             printStatus();
         }
 
-        System.out.println(
-                "\nChoose an option" +
-                        "\nenqueue: Add element" +
-                        "\ndequeue: Remove first element" +
-                        "\npeek: View first element" +
-                        "\nsize: Show size" +
-                        "\nisempty: Check if empty" +
-                        "\nclear: Clear queue" +
-                        "\nmm: Return to Main Menu"
+        System.out.println("\nChoose an option:"
+            + "\nenqueue - Add element to the back."
+            + "\ndequeue - Remove and return front element."
+            + "\npeek    - View front element."
+            + "\nclear   - Clear the queue."
+            + "\nmm      - Main Menu"
         );
 
         String userInput = scanner.nextLine().toLowerCase();
-
         switch (userInput) {
-            case "enqueue":
-                currentPhase = 1;
-                break;
-            case "dequeue":
-                currentPhase = 2;
-                break;
-            case "peek":
-                currentPhase = 3;
-                break;
-            case "clear":
-                currentPhase = 4;
-                break;
-            case "size":
-                System.out.println("Size: " + queue.size());
-                break;
-            case "isempty":
-                System.out.println("Is empty: " + queue.isEmpty());
-                break;
-            case "mm":
-                running = false;
-                break;
+            case "enqueue": currentPhase = 1; break;
+            case "dequeue": currentPhase = 2; break;
+            case "peek":    currentPhase = 3; break;
+            case "clear":   currentPhase = 4; break;
+            case "mm":      running = false;   break;
             default:
-                System.out.println("Invalid choice, try again.");
+                System.out.println("Invalid input, try again.");
+                break;
         }
     }
 
-    private void printStatus() {
-        System.out.println("\nCurrent size: " + queue.size());
-        System.out.println("Is empty: " + queue.isEmpty());
-    }
-
     private void enqueueLogic() {
-<<<<<<< Updated upstream
-        System.out.print("Enter a number to enqueue: ");
-        int value = Integer.parseInt(scanner.nextLine());
-        queue.enqueue(value);
-
-        System.out.println("Elemento agregado");
-=======
         System.out.println("\nEnter a String to enqueue:");
         String value = scanner.nextLine().trim();
         if (value.isEmpty()) {
@@ -108,69 +63,58 @@ public class QueueExercise extends Exercise {
         }
         queue.enqueue(value);
         printStatus();
->>>>>>> Stashed changes
 
         boolean validInput = false;
         while (!validInput) {
             System.out.println("\nEnqueue another element? y/n");
             String userInput = scanner.nextLine().toLowerCase();
             switch (userInput) {
-                case "y":
-                    validInput = true;
-                    break;
-                case "n":
-                    validInput = true;
-                    currentPhase = 0;
-                    break;
-                default:
-                    System.out.println("Invalid option");
+                case "y": validInput = true;                    break;
+                case "n": validInput = true; currentPhase = 0; break;
             }
         }
     }
 
     private void dequeueLogic() {
         if (queue.isEmpty()) {
-            System.out.println("Queue is empty");
+            System.out.println("\nQueue is empty.");
             currentPhase = 0;
             return;
         }
-
-        System.out.println("Removed: " + queue.dequeue());
+        System.out.println("\nDequeued: " + queue.dequeue());
+        printStatus();
 
         boolean validInput = false;
         while (!validInput) {
-            System.out.println("\nDequeue again? y/n");
+            System.out.println("\nDequeue another element? y/n");
             String userInput = scanner.nextLine().toLowerCase();
             switch (userInput) {
-                case "y":
-                    validInput = true;
-                    break;
-                case "n":
-                    validInput = true;
-                    currentPhase = 0;
-                    break;
-                default:
-                    System.out.println("Invalid option");
+                case "y": validInput = true;                    break;
+                case "n": validInput = true; currentPhase = 0; break;
             }
         }
     }
 
     private void peekLogic() {
         if (queue.isEmpty()) {
-            System.out.println("Queue is empty");
+            System.out.println("\nQueue is empty.");
         } else {
-            System.out.println("First: " + queue.peek());
+            System.out.println("\nFront element: " + queue.peek());
+        }
+        currentPhase = 0; // peek siempre vuelve al menú
+    }
+
+    private void clearLogic() {
+        if (!queue.isEmpty()) {
+            queue.clear();
+            System.out.println("\nQueue cleared.");
+        } else {
+            System.out.println("\nQueue is already empty.");
         }
         currentPhase = 0;
     }
 
-    private void clearLogic() {
-        if (queue.isEmpty()) {
-            System.out.println("Queue already empty");
-        } else {
-            queue.clear();
-            System.out.println("Queue cleared");
-        }
-        currentPhase = 0;
+    private void printStatus() {
+        System.out.println("Size: " + queue.size() + " | Empty: " + queue.isEmpty());
     }
 }

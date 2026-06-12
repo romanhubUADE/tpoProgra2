@@ -1,13 +1,10 @@
 package stackModule;
 
-public interface SimpleStack <E>{
-
-    public void push(E element);
-    public E pop();
-    public E peek();
-    public void clear();
-    public int size();
-    public boolean isEmpty();
-
-
+public interface SimpleStack<E> {
+    void push(E element);
+    E pop();
+    E peek();
+    void clear();
+    int size();
+    boolean isEmpty();
 }

@@ -1,77 +1,65 @@
 package queueModule;
 
 import java.util.NoSuchElementException;
+import listModule.LinkedNode;
 
 public class SimpleLinkedQueue<E> implements SimpleQueue<E> {
 
-<<<<<<< Updated upstream
-    private Node<E> first;
-    private Node<E> last;
-=======
-    private LinkedNode<E> first;
-    private LinkedNode<E> last;
->>>>>>> Stashed changes
+    private LinkedNode<E> first; // el frente de la cola
+    private LinkedNode<E> last;  // el final de la cola
     private int size;
 
-    private static class Node<E> {
-        E data;
-        Node<E> next;
-
-        Node(E data) {
-            this.data = data;
-        }
+    public SimpleLinkedQueue() {
+        first = null;
+        last = null;
+        size = 0;
     }
 
     @Override
     public void enqueue(E element) {
-<<<<<<< Updated upstream
-        Node<E> newNode = new Node<>(element);
-
-=======
-        if (element == null) throw new IllegalArgumentException("element cannot be null");
         LinkedNode<E> newNode = new LinkedNode<>(element);
->>>>>>> Stashed changes
         if (isEmpty()) {
             first = newNode;
+            last = newNode;
         } else {
+            newNode.prev = last;
             last.next = newNode;
+            last = newNode;
         }
-
-        last = newNode;
         size++;
     }
 
     @Override
     public E dequeue() {
-        if (isEmpty()) throw new NoSuchElementException("Queue is empty");
-
-        E data = first.data;
-        first = first.next;
-        size--;
-
-        if (isEmpty()) {
+        if (isEmpty()) throw new NoSuchElementException("Queue is empty.");
+        E value = first.value;
+        if (size == 1) {
+            first = null;
             last = null;
+        } else {
+            first = first.next;
+            first.prev = null;
         }
-
-        return data;
+        size--;
+        return value;
     }
 
     @Override
     public E peek() {
-        if (isEmpty()) throw new NoSuchElementException("Queue is empty");
-        return first.data;
+        if (isEmpty()) throw new NoSuchElementException("Queue is empty.");
+        return first.value;
     }
 
     @Override
-    public void clear() { first = null; last = null; size = 0; }
-
-    @Override
-    public int size() {
-        return size;
+    public void clear() {
+        first = null;
+        last = null;
+        size = 0;
     }
 
     @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
+    public int size() { return size; }
+
+    @Override
+    public boolean isEmpty() { return size == 0; }
 }

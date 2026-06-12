@@ -72,7 +72,11 @@ public class SimpleLinkedPriorityQueue<E> implements SimplePriorityQueue<E> {
     }
 
     @Override
-    public void clear() { first = null; last = null; size = 0; }
+    public void clear() {
+        first = null;
+        last = null;
+        size = 0;
+    }
 
     @Override
     public int size() { return size; }

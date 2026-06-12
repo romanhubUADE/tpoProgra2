@@ -1,34 +1,20 @@
 package stackModule;
 
 import java.util.NoSuchElementException;
+import listModule.LinkedNode;
 
-public class SimpleLinkedStack <E> implements SimpleStack<E>{
+public class SimpleLinkedStack<E> implements SimpleStack<E> {
 
-<<<<<<< Updated upstream
-    private Node<E> top;
-=======
-    private LinkedNode<E> last;
->>>>>>> Stashed changes
+    private LinkedNode<E> last; // el tope de la pila
     private int size;
 
-    public static class Node<E>{
-        E data;
-        Node<E> next;
-
-        Node(E data, Node<E> next){
-            this.data = data;
-            this.next = next;
-        }
-
+    public SimpleLinkedStack() {
+        last = null;
+        size = 0;
     }
 
     @Override
     public void push(E element) {
-<<<<<<< Updated upstream
-        top = new Node<>(element, top);
-        size ++;
-=======
-        if (element == null) throw new IllegalArgumentException("element cannot be null");
         LinkedNode<E> newNode = new LinkedNode<>(element);
         if (!isEmpty()) {
             newNode.prev = last;
@@ -36,43 +22,37 @@ public class SimpleLinkedStack <E> implements SimpleStack<E>{
         }
         last = newNode;
         size++;
->>>>>>> Stashed changes
     }
 
     @Override
     public E pop() {
-        if (isEmpty()) throw new NoSuchElementException("Stack is empty");
-        E data = top.data;
-        top = top.next;
-        size --;
-        return data;
+        if (isEmpty()) throw new NoSuchElementException("Stack is empty.");
+        E value = last.value;
+        if (size == 1) {
+            last = null;
+        } else {
+            last = last.prev;
+            last.next = null;
+        }
+        size--;
+        return value;
     }
 
     @Override
     public E peek() {
-        if (isEmpty()) throw new NoSuchElementException("Stack is empty");
-        return top.data;
+        if (isEmpty()) throw new NoSuchElementException("Stack is empty.");
+        return last.value;
     }
 
     @Override
-<<<<<<< Updated upstream
     public void clear() {
-        top = null;
+        last = null;
         size = 0;
     }
-=======
-    public void clear() { last = null; size = 0; }
->>>>>>> Stashed changes
 
     @Override
-    public int size() {
-        return size;
-    }
+    public int size() { return size; }
 
     @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-
+    public boolean isEmpty() { return size == 0; }
 }

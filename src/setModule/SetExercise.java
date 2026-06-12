@@ -138,12 +138,7 @@ public class SetExercise extends Exercise {
         }
 
         System.out.println("\nEnter a String to remove from Set " + selectedSetName + ":");
-        String value = scanner.nextLine().trim();
-        if (value.isEmpty()) {
-            System.out.println("Value cannot be empty.");
-            currentPhase = 1;
-            return;
-        }
+        String value = scanner.nextLine();
         boolean removed = selectedSet.remove(value);
 
         if (removed) {

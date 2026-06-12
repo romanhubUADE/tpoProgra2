@@ -1,0 +1,94 @@
+package graphModule;
+
+import dictionaryModule.SimpleArrayDictionary;
+import dictionaryModule.SimpleDictionary;
+import listModule.SimpleLinkedList;
+import listModule.SimpleList;
+
+public class ListGraph<T> implements Graph<T> {
+    private SimpleDictionary<T, SimpleList<Edge<T>>> adjacencyList;
+
+    public ListGraph() {
+        adjacencyList = new SimpleArrayDictionary<T, SimpleList<Edge<T>>>();
+    }
+
+    @Override
+    public SimpleList<T> vertices() {
+        return adjacencyList.keys();
+    }
+
+    @Override
+    public SimpleList<Edge<T>> getNeighbors(T vertex) {
+        return adjacencyList.get(vertex);
+    }
+
+    @Override
+    public boolean containsVertex(T vertex) {
+        return adjacencyList.containsKey(vertex);
+    }
+
+    @Override
+    public boolean addVertex(T vertex) {
+        if (containsVertex(vertex)) return false;
+        adjacencyList.put(vertex, new SimpleLinkedList<Edge<T>>());
+        return true;
+    }
+
+    @Override
+    public boolean removeVertex(T vertex) {
+        if (!containsVertex(vertex)) return false;
+
+        adjacencyList.remove(vertex);
+        SimpleList<T> vertices = vertices();
+        for (int i = 0; i < vertices.size(); i++)
+            removeEdge(vertices.get(i), vertex);
+        return true;
+    }
+
+    @Override
+    public boolean containsEdge(T from, T to) {
+        return getEdge(from, to) != null;
+    }
+
+    @Override
+    public int getWeight(T from, T to) {
+        Edge<T> targetEdge = getEdge(from, to);
+        if (targetEdge == null) return -1;
+        return targetEdge.weight;
+    }
+
+    private Edge<T> getEdge(T from, T to) {
+        if (!containsVertex(from)) return null;
+
+        SimpleList<Edge<T>> edges = adjacencyList.get(from);
+        for (int i = 0; i < edges.size(); i++) {
+            if (edges.get(i).destination.equals(to)) return edges.get(i);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean addEdge(T from, T to, int weight) {
+        addVertex(from);
+        addVertex(to);
+        Edge<T> edge = getEdge(from, to);
+
+        if (edge == null) {
+            adjacencyList.get(from).add(new Edge<T>(to, weight));
+            return true;
+        }
+
+        if (edge.weight != weight) {
+            edge.weight = weight;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean removeEdge(T from, T to) {
+        Edge<T> edge = getEdge(from, to);
+        if (edge == null) return false;
+        return adjacencyList.get(from).remove(edge);
+    }
+}
