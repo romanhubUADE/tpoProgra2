@@ -1,4 +1,4 @@
-package bstModule;
+package treeModule;
 
 
 public class Contact implements Comparable<Contact> {

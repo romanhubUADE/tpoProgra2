@@ -1,4 +1,4 @@
-package bstModule;
+package treeModule;
 
 import application.Exercise;
 import java.util.Scanner;
@@ -18,14 +18,13 @@ public class ContactsExercise extends Exercise {
     private int currentPhase = PHASE_MENU;
     private boolean firstTime = true;
 
-    // Declarado como SimpleBST (abstracción), instanciado como AVL: el árbol
-    // se autobalancea (TP09) sin que el resto del ejercicio cambie.
-    private final SimpleBST<Contact> bst;
+    // TP09: el árbol es un AVL (se autobalancea en alta y baja).
+    private final SimpleAVL<Contact> avl;
     private Contact selectedContact;
 
     public ContactsExercise(Scanner scanner) {
         super(scanner);
-        bst = new SimpleAVL<>();
+        avl = new SimpleAVL<>();
     }
 
     @Override
@@ -48,7 +47,7 @@ public class ContactsExercise extends Exercise {
             firstTime = false;
             System.out.println("\nWelcome to the Contacts Application.");
         }
-        System.out.println("\nTotal contacts: " + bst.size());
+        System.out.println("\nTotal contacts: " + avl.size());
         System.out.println("\nChoose an option:"
             + "\nadd    - Add a new contact"
             + "\nsearch - Search contact by name"
@@ -74,7 +73,7 @@ public class ContactsExercise extends Exercise {
         String name = readNonEmpty("Name");
         if (name == null) { currentPhase = PHASE_MENU; return; }
 
-        if (bst.contains(new Contact(name))) {
+        if (avl.contains(new Contact(name))) {
             System.out.println("A contact named \"" + name + "\" already exists.");
             currentPhase = PHASE_MENU;
             return;
@@ -88,7 +87,7 @@ public class ContactsExercise extends Exercise {
 
         try {
             Contact c = new Contact(name, phone, email);
-            bst.insert(c);
+            avl.insert(c);
             System.out.println("Contact added successfully:\n  " + c);
         } catch (IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage());
@@ -102,7 +101,7 @@ public class ContactsExercise extends Exercise {
         String name = readNonEmpty("Contact name");
         if (name == null) { currentPhase = PHASE_MENU; return; }
 
-        Contact found = bst.search(new Contact(name));
+        Contact found = avl.search(new Contact(name));
         if (found == null) {
             System.out.println("No contact found with name \"" + name + "\".");
             currentPhase = PHASE_MENU;
@@ -161,16 +160,16 @@ public class ContactsExercise extends Exercise {
             return;
         }
 
-        if (bst.contains(new Contact(newName))) {
+        if (avl.contains(new Contact(newName))) {
             System.out.println("A contact named \"" + newName + "\" already exists.");
             currentPhase = PHASE_EDIT_MENU;
             return;
         }
 
         try {
-            bst.remove(selectedContact);
+            avl.remove(selectedContact);
             selectedContact.setName(newName);
-            bst.insert(selectedContact);
+            avl.insert(selectedContact);
             System.out.println("Name updated:\n  " + selectedContact);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
@@ -209,7 +208,7 @@ public class ContactsExercise extends Exercise {
         String confirm = scanner.nextLine().trim().toLowerCase();
         if (confirm.equals("y")) {
             try {
-                bst.remove(selectedContact);
+                avl.remove(selectedContact);
                 System.out.println("Contact deleted.");
                 selectedContact = null;
             } catch (Exception e) {
@@ -222,11 +221,11 @@ public class ContactsExercise extends Exercise {
     }
 
     private void showAllLogic() {
-        if (bst.isEmpty()) {
+        if (avl.isEmpty()) {
             System.out.println("\nNo contacts saved.");
         } else {
-            System.out.println("\n-- All Contacts (" + bst.size() + ") – alphabetical order --");
-            Object[] contacts = bst.inOrder();
+            System.out.println("\n-- All Contacts (" + avl.size() + ") – alphabetical order --");
+            Object[] contacts = avl.inOrder();
             for (int i = 0; i < contacts.length; i++) {
                 System.out.println((i + 1) + ". " + contacts[i]);
             }
@@ -235,26 +234,45 @@ public class ContactsExercise extends Exercise {
     }
 
     private void loadSampleData() {
-        if (!bst.isEmpty()) {
-            System.out.println("\nThere are already " + bst.size() + " contact(s). Clear and reload? (y/n)");
+        if (!avl.isEmpty()) {
+            System.out.println("\nThere are already " + avl.size() + " contact(s). Clear and reload? (y/n)");
             String confirm = scanner.nextLine().trim().toLowerCase();
             if (!confirm.equals("y")) {
                 System.out.println("Load cancelled.");
                 return;
             }
-            bst.clear();
+            avl.clear();
         }
 
-        bst.insert(new Contact("Alice Smith",    "555-1001", "alice@mail.com"));
-        bst.insert(new Contact("Bob Johnson",    "555-1002", "bob@mail.com"));
-        bst.insert(new Contact("Carlos Lopez",   "555-1003", "carlos@mail.com"));
-        bst.insert(new Contact("Diana Prince",   "555-1004", "diana@mail.com"));
-        bst.insert(new Contact("Eduardo Gomez",  "555-1005", "eduardo@mail.com"));
-        bst.insert(new Contact("Fiona Green",    "555-1006", "fiona@mail.com"));
-        bst.insert(new Contact("Gabriel Torres", "555-1007", "gabriel@mail.com"));
-        bst.insert(new Contact("Hannah White",   "555-1008", "hannah@mail.com"));
+        // Plantel campeón del mundo - Qatar 2022 (el teléfono lleva el dorsal real).
+        avl.insert(new Contact("Franco Armani",       "+54 9 11 2022-0001", "franco.armani@afa.org.ar"));
+        avl.insert(new Contact("Juan Foyth",          "+54 9 11 2022-0002", "juan.foyth@afa.org.ar"));
+        avl.insert(new Contact("Nicolas Tagliafico",  "+54 9 11 2022-0003", "nicolas.tagliafico@afa.org.ar"));
+        avl.insert(new Contact("Gonzalo Montiel",     "+54 9 11 2022-0004", "gonzalo.montiel@afa.org.ar"));
+        avl.insert(new Contact("Leandro Paredes",     "+54 9 11 2022-0005", "leandro.paredes@afa.org.ar"));
+        avl.insert(new Contact("German Pezzella",     "+54 9 11 2022-0006", "german.pezzella@afa.org.ar"));
+        avl.insert(new Contact("Rodrigo De Paul",     "+54 9 11 2022-0007", "rodrigo.depaul@afa.org.ar"));
+        avl.insert(new Contact("Marcos Acuna",        "+54 9 11 2022-0008", "marcos.acuna@afa.org.ar"));
+        avl.insert(new Contact("Julian Alvarez",      "+54 9 11 2022-0009", "julian.alvarez@afa.org.ar"));
+        avl.insert(new Contact("Lionel Messi",        "+54 9 11 2022-0010", "lionel.messi@afa.org.ar"));
+        avl.insert(new Contact("Angel Di Maria",      "+54 9 11 2022-0011", "angel.dimaria@afa.org.ar"));
+        avl.insert(new Contact("Geronimo Rulli",      "+54 9 11 2022-0012", "geronimo.rulli@afa.org.ar"));
+        avl.insert(new Contact("Cristian Romero",     "+54 9 11 2022-0013", "cristian.romero@afa.org.ar"));
+        avl.insert(new Contact("Exequiel Palacios",   "+54 9 11 2022-0014", "exequiel.palacios@afa.org.ar"));
+        avl.insert(new Contact("Angel Correa",        "+54 9 11 2022-0015", "angel.correa@afa.org.ar"));
+        avl.insert(new Contact("Thiago Almada",       "+54 9 11 2022-0016", "thiago.almada@afa.org.ar"));
+        avl.insert(new Contact("Alejandro Gomez",     "+54 9 11 2022-0017", "alejandro.gomez@afa.org.ar"));
+        avl.insert(new Contact("Guido Rodriguez",     "+54 9 11 2022-0018", "guido.rodriguez@afa.org.ar"));
+        avl.insert(new Contact("Nicolas Otamendi",    "+54 9 11 2022-0019", "nicolas.otamendi@afa.org.ar"));
+        avl.insert(new Contact("Alexis Mac Allister", "+54 9 11 2022-0020", "alexis.macallister@afa.org.ar"));
+        avl.insert(new Contact("Paulo Dybala",        "+54 9 11 2022-0021", "paulo.dybala@afa.org.ar"));
+        avl.insert(new Contact("Lautaro Martinez",    "+54 9 11 2022-0022", "lautaro.martinez@afa.org.ar"));
+        avl.insert(new Contact("Emiliano Martinez",   "+54 9 11 2022-0023", "emiliano.martinez@afa.org.ar"));
+        avl.insert(new Contact("Enzo Fernandez",      "+54 9 11 2022-0024", "enzo.fernandez@afa.org.ar"));
+        avl.insert(new Contact("Nahuel Molina",       "+54 9 11 2022-0025", "nahuel.molina@afa.org.ar"));
+        avl.insert(new Contact("Lisandro Martinez",   "+54 9 11 2022-0026", "lisandro.martinez@afa.org.ar"));
 
-        System.out.println("Sample data loaded. Total contacts: " + bst.size());
+        System.out.println("Sample data loaded. Total contacts: " + avl.size());
     }
 
     private String readNonEmpty(String fieldName) {

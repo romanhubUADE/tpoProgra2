@@ -2,6 +2,7 @@ package dictionaryModule;
 
 import application.Exercise;
 import java.util.Scanner;
+import listModule.SimpleList;
 
 public class DictionaryExercise extends Exercise {
     private int currentPhase = 0;
@@ -153,7 +154,7 @@ public class DictionaryExercise extends Exercise {
     }
 
     private void keysLogic() {
-        System.out.println("\nKeys: " + formatArray(dictionary.keys()));
+        System.out.println("\nKeys: " + formatList(dictionary.keys()));
         currentPhase = 0;
     }
 
@@ -181,6 +182,16 @@ public class DictionaryExercise extends Exercise {
         for (int i = 0; i < array.length; i++) {
             result += array[i];
             if (i < array.length - 1) result += ", ";
+        }
+        result += "}";
+        return result;
+    }
+
+    private String formatList(SimpleList<?> list) {
+        String result = "{";
+        for (int i = 0; i < list.size(); i++) {
+            result += list.get(i);
+            if (i < list.size() - 1) result += ", ";
         }
         result += "}";
         return result;

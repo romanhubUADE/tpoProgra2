@@ -1,12 +1,12 @@
-package bstModule;
+package treeModule;
 
-class BSTNode<T> {
+class TreeNode<T> {
     T value;
-    BSTNode<T> left;
-    BSTNode<T> right;
+    TreeNode<T> left;
+    TreeNode<T> right;
     int height = 0;   // altura del nodo. Una hoja vale 0; null vale -1. Lo usa SimpleAVL.
 
-    BSTNode(T value) {
+    TreeNode(T value) {
         this.value = value;
     }
 }

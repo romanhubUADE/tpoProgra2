@@ -9,8 +9,8 @@ import priorityQueueModule.PriorityQueueExercise;
 import dictionaryModule.DictionaryExercise;
 import emailModule.EmailExercise;
 import authModule.AuthExercise;
-import graphModule.GraphExercise;
-import bstModule.ContactsExercise;
+import graphModule.FlightExercise;
+import treeModule.ContactsExercise;
 
 public class MainProgram {
     private boolean running = true;
@@ -44,7 +44,7 @@ public class MainProgram {
             + "\n7 - Dictionary Exercise"
             + "\n8 - Email Exercise (TP6)"
             + "\n9 - Auth Exercise (TP7)"
-            + "\n10 - Graph Exercise"
+            + "\n10 - Flight Route Planner (TP10 - Graph + Dijkstra)"
             + "\n11 - Contacts Exercise (TP8/TP9 - AVL)"
         );
         String userInput = scanner.nextLine();
@@ -80,7 +80,7 @@ public class MainProgram {
                 exercise = new AuthExercise(scanner);
                 break;
             case "10":
-                exercise = new GraphExercise(scanner);
+                exercise = new FlightExercise(scanner);
                 break;
             case "11":
                 exercise = new ContactsExercise(scanner);

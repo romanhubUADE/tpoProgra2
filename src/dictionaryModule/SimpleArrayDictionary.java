@@ -1,5 +1,8 @@
 package dictionaryModule;
 
+import listModule.SimpleLinkedList;
+import listModule.SimpleList;
+
 public class SimpleArrayDictionary<K, V> implements SimpleDictionary<K, V> {
 
     private K[] keys;
@@ -40,7 +43,7 @@ public class SimpleArrayDictionary<K, V> implements SimpleDictionary<K, V> {
     @Override
     public V put(K key, V value) {
         if (key == null) throw new NullPointerException("key cannot be null");
-        if (value == null) throw new NullPointerException("value cannot be null");
+       // if (value == null) throw new NullPointerException("value cannot be null");
 
         int index = indexOf(key);
         if (index != -1) {
@@ -85,15 +88,13 @@ public class SimpleArrayDictionary<K, V> implements SimpleDictionary<K, V> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public K[] keys() {
-        K[] result = (K[]) new Object[size];
-        for (int i = 0; i < size; i++) result[i] = keys[i];
+    public SimpleList<K> keys() {
+        SimpleList<K> result = new SimpleLinkedList<K>();
+        for (int i = 0; i < size; i++) result.add(keys[i]);
         return result;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public V[] values() {
         V[] result = (V[]) new Object[size];
         for (int i = 0; i < size; i++) result[i] = values[i];

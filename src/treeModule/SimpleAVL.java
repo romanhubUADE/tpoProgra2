@@ -1,4 +1,4 @@
-package bstModule;
+package treeModule;
 
 /**
  * AVL Tree: un BST que se mantiene siempre balanceado.
@@ -13,8 +13,8 @@ package bstModule;
 public class SimpleAVL<T extends Comparable<T>> extends SimpleBST<T> {
 
     @Override
-    protected BSTNode<T> insertRecursive(BSTNode<T> node, T element) {
-        if (node == null) return new BSTNode<>(element);
+    protected TreeNode<T> insertRecursive(TreeNode<T> node, T element) {
+        if (node == null) return new TreeNode<>(element);
 
         int cmp = element.compareTo(node.value);
         if (cmp < 0) node.left  = insertRecursive(node.left,  element);
@@ -25,7 +25,7 @@ public class SimpleAVL<T extends Comparable<T>> extends SimpleBST<T> {
     }
 
     @Override
-    protected BSTNode<T> removeRecursive(BSTNode<T> node, T element) {
+    protected TreeNode<T> removeRecursive(TreeNode<T> node, T element) {
         if (node == null) return null;
 
         int cmp = element.compareTo(node.value);
@@ -47,22 +47,22 @@ public class SimpleAVL<T extends Comparable<T>> extends SimpleBST<T> {
 
     // ── Alturas y factor de balance ─────────────────────────────────────────
 
-    private int height(BSTNode<T> node) {
+    private int height(TreeNode<T> node) {
         return node == null ? -1 : node.height;
     }
 
-    private void updateHeight(BSTNode<T> node) {
+    private void updateHeight(TreeNode<T> node) {
         node.height = 1 + Math.max(height(node.left), height(node.right));
     }
 
     /** Factor de balance: altura del subárbol izquierdo menos la del derecho. */
-    private int balanceFactor(BSTNode<T> node) {
+    private int balanceFactor(TreeNode<T> node) {
         return node == null ? 0 : height(node.left) - height(node.right);
     }
 
     // ── Rebalanceo ──────────────────────────────────────────────────────────
 
-    private BSTNode<T> rebalance(BSTNode<T> node) {
+    private TreeNode<T> rebalance(TreeNode<T> node) {
         int balance = balanceFactor(node);
 
         // Pesado a la izquierda
@@ -80,9 +80,9 @@ public class SimpleAVL<T extends Comparable<T>> extends SimpleBST<T> {
 
     // ── Rotaciones ────────────────────────────────────────────────────────────
 
-    private BSTNode<T> rotateRight(BSTNode<T> y) {
-        BSTNode<T> x  = y.left;
-        BSTNode<T> t2 = x.right;
+    private TreeNode<T> rotateRight(TreeNode<T> y) {
+        TreeNode<T> x  = y.left;
+        TreeNode<T> t2 = x.right;
         x.right = y;
         y.left  = t2;
         updateHeight(y);
@@ -90,9 +90,9 @@ public class SimpleAVL<T extends Comparable<T>> extends SimpleBST<T> {
         return x;
     }
 
-    private BSTNode<T> rotateLeft(BSTNode<T> x) {
-        BSTNode<T> y  = x.right;
-        BSTNode<T> t2 = y.left;
+    private TreeNode<T> rotateLeft(TreeNode<T> x) {
+        TreeNode<T> y  = x.right;
+        TreeNode<T> t2 = y.left;
         y.left  = x;
         x.right = t2;
         updateHeight(x);

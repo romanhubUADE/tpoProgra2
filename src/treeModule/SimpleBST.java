@@ -1,11 +1,11 @@
-package bstModule;
+package treeModule;
 
 import java.util.NoSuchElementException;
 
 
 public class SimpleBST<T extends Comparable<T>> {
 
-    private BSTNode<T> root;
+    private TreeNode<T> root;
     private int size;
 
     public void insert(T element) {
@@ -15,8 +15,8 @@ public class SimpleBST<T extends Comparable<T>> {
         size++;
     }
 
-    protected BSTNode<T> insertRecursive(BSTNode<T> node, T element) {
-        if (node == null) return new BSTNode<>(element);
+    protected TreeNode<T> insertRecursive(TreeNode<T> node, T element) {
+        if (node == null) return new TreeNode<>(element);
         int cmp = element.compareTo(node.value);
         if (cmp < 0) node.left  = insertRecursive(node.left,  element);
         else         node.right = insertRecursive(node.right, element);
@@ -30,7 +30,7 @@ public class SimpleBST<T extends Comparable<T>> {
         size--;
     }
 
-    protected BSTNode<T> removeRecursive(BSTNode<T> node, T element) {
+    protected TreeNode<T> removeRecursive(TreeNode<T> node, T element) {
         if (node == null) return null;
         int cmp = element.compareTo(node.value);
         if (cmp < 0) {
@@ -47,17 +47,17 @@ public class SimpleBST<T extends Comparable<T>> {
         return node;
     }
 
-    protected T findMin(BSTNode<T> node) {
+    protected T findMin(TreeNode<T> node) {
         while (node.left != null) node = node.left;
         return node.value;
     }
 
     public T search(T key) {
-        BSTNode<T> node = searchNode(root, key);
+        TreeNode<T> node = searchNode(root, key);
         return node == null ? null : node.value;
     }
 
-    private BSTNode<T> searchNode(BSTNode<T> node, T key) {
+    private TreeNode<T> searchNode(TreeNode<T> node, T key) {
         if (node == null) return null;
         int cmp = key.compareTo(node.value);
         if (cmp == 0) return node;
@@ -76,7 +76,7 @@ public class SimpleBST<T extends Comparable<T>> {
         return result;
     }
 
-    private void inOrderRecursive(BSTNode<T> node, Object[] result, int[] index) {
+    private void inOrderRecursive(TreeNode<T> node, Object[] result, int[] index) {
         if (node == null) return;
         inOrderRecursive(node.left,  result, index);
         result[index[0]++] = node.value;
