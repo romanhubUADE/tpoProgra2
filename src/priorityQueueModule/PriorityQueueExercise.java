@@ -3,6 +3,11 @@ package priorityQueueModule;
 import application.Exercise;
 import java.util.Scanner;
 
+/**
+ * Ejercicio interactivo para probar la cola de prioridad desde la consola.
+ * Permite encolar y desencolar strings asignándoles un valor de prioridad,
+ * y observar el comportamiento del TDA en tiempo real.
+ */
 public class PriorityQueueExercise extends Exercise {
     private int currentPhase = 0;
     private boolean firstTime = true;
@@ -13,6 +18,7 @@ public class PriorityQueueExercise extends Exercise {
         queue = new SimpleArrayPriorityQueue<>(); // cambiar por SimpleLinkedPriorityQueue o SimpleArrayPriorityQueue para comparar
     }
 
+    /** Delega en el método correspondiente según la fase actual del flujo de menús. */
     @Override
     protected void exerciseLogic() {
         switch (currentPhase) {
@@ -25,6 +31,7 @@ public class PriorityQueueExercise extends Exercise {
         }
     }
 
+    /** Muestra el menú principal y deriva a la fase elegida por el usuario. */
     private void menuLogic() {
         if (firstTime) {
             firstTime = false;
@@ -57,6 +64,7 @@ public class PriorityQueueExercise extends Exercise {
         }
     }
 
+    /** Pide un string y una prioridad, y los encola. Ofrece encolar otro sin volver al menú. */
     private void enqueueLogic() {
         System.out.println("\nEnter a String to enqueue:");
         String value = scanner.nextLine().trim();
@@ -81,6 +89,7 @@ public class PriorityQueueExercise extends Exercise {
         }
     }
 
+    /** Desencola el elemento de mayor urgencia y lo muestra. Ofrece desencolar otro. */
     private void dequeueLogic() {
         if (queue.isEmpty()) {
             System.out.println("\nQueue is empty.");
@@ -101,6 +110,7 @@ public class PriorityQueueExercise extends Exercise {
         }
     }
 
+    /** Muestra el elemento de mayor urgencia sin sacarlo. */
     private void peekLogic() {
         if (queue.isEmpty()) {
             System.out.println("\nQueue is empty.");
@@ -110,6 +120,7 @@ public class PriorityQueueExercise extends Exercise {
         currentPhase = 0;
     }
 
+    /** Muestra el valor numérico de la prioridad más urgente que hay en la cola. */
     private void highestLogic() {
         if (queue.isEmpty()) {
             System.out.println("\nQueue is empty.");
@@ -119,6 +130,7 @@ public class PriorityQueueExercise extends Exercise {
         currentPhase = 0;
     }
 
+    /** Vacía la cola completa si el usuario confirma. */
     private void clearLogic() {
         if (!queue.isEmpty()) {
             queue.clear();
@@ -129,6 +141,7 @@ public class PriorityQueueExercise extends Exercise {
         currentPhase = 0;
     }
 
+    /** Lee un entero desde la consola; repite hasta que el usuario ingrese algo válido. */
     private int readPriority() {
         while (true) {
             System.out.println("Enter priority (integer):");
@@ -141,6 +154,7 @@ public class PriorityQueueExercise extends Exercise {
         }
     }
 
+    /** Imprime en consola el tamaño actual de la cola y si está vacía. */
     private void printStatus() {
         System.out.println("Size: " + queue.size() + " | Empty: " + queue.isEmpty());
     }

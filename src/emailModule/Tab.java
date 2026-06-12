@@ -1,5 +1,9 @@
 package emailModule;
 
+/**
+ * Representa las pestañas (carpetas) del sistema de email.
+ * Cada pestaña tiene un nombre para mostrar en pantalla.
+ */
 public enum Tab {
 
     PRINCIPAL("Principal"),
@@ -12,6 +16,7 @@ public enum Tab {
         this.displayName = displayName;
     }
 
+    /** Devuelve el nombre legible de la pestaña, para mostrar en la interfaz. */
     public String getDisplayName() {
         return displayName;
     }

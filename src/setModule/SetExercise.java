@@ -3,14 +3,19 @@ package setModule;
 import application.Exercise;
 import java.util.Scanner;
 
+/**
+ * Ejercicio interactivo del TDA Conjunto. Permite trabajar con dos conjuntos (A y B)
+ * de Strings: agregar y eliminar elementos, y calcular unión, intersección y diferencia.
+ * Usa una máquina de estados (currentPhase) para navegar entre pantallas.
+ */
 public class SetExercise extends Exercise {
     private int currentPhase = 0;
     private boolean firstTime = true;
 
     private SimpleSet<String> setA;
     private SimpleSet<String> setB;
-    private SimpleSet<String> selectedSet;
-    private String selectedSetName;
+    private SimpleSet<String> selectedSet;     // conjunto sobre el que el usuario trabaja actualmente
+    private String selectedSetName;            // "A" o "B", para mostrar en pantalla
 
     public SetExercise(Scanner scanner) {
         super(scanner);
@@ -20,6 +25,10 @@ public class SetExercise extends Exercise {
         selectedSetName = "";
     }
 
+    /**
+     * Método principal del ejercicio. Se llama en cada iteración del loop
+     * y delega en el método correspondiente a la fase actual.
+     */
     @Override
     protected void exerciseLogic() {
         switch (currentPhase) {
@@ -34,6 +43,7 @@ public class SetExercise extends Exercise {
         }
     }
 
+    /** Muestra el menú principal y procesa la opción elegida. */
     private void menuLogic() {
         if (firstTime) {
             firstTime = false;
@@ -85,6 +95,7 @@ public class SetExercise extends Exercise {
         }
     }
 
+    /** Muestra las opciones para el conjunto seleccionado (agregar, eliminar, volver). */
     private void setMenuLogic() {
         System.out.println("\nWorking on Set " + selectedSetName + ": " + formatSet(selectedSet));
         System.out.println("Choose an option:"
@@ -110,6 +121,7 @@ public class SetExercise extends Exercise {
         }
     }
 
+    /** Pide un String al usuario y lo agrega al conjunto seleccionado. */
     private void addLogic() {
         System.out.println("\nEnter a String to add into Set " + selectedSetName + ":");
         String value = scanner.nextLine().trim();
@@ -130,6 +142,7 @@ public class SetExercise extends Exercise {
         repeatOperationQuestion("add");
     }
 
+    /** Pide un String al usuario y lo elimina del conjunto seleccionado. */
     private void removeLogic() {
         if (selectedSet.isEmpty()) {
             System.out.println("\nSet " + selectedSetName + " is empty.");
@@ -151,30 +164,38 @@ public class SetExercise extends Exercise {
         repeatOperationQuestion("remove");
     }
 
+    /** Calcula y muestra A ∪ B. */
     private void unionLogic() {
         SimpleSet<String> result = setA.unionWith(setB);
         System.out.println("\nA union B: " + formatSet(result));
         currentPhase = 0;
     }
 
+    /** Calcula y muestra A ∩ B. */
     private void intersectLogic() {
         SimpleSet<String> result = setA.intersectWith(setB);
         System.out.println("\nA intersect B: " + formatSet(result));
         currentPhase = 0;
     }
 
+    /** Calcula y muestra A - B (elementos de A que no están en B). */
     private void differenceABLogic() {
         SimpleSet<String> result = setA.differenceWith(setB);
         System.out.println("\nA difference B: " + formatSet(result));
         currentPhase = 0;
     }
 
+    /** Calcula y muestra B - A (elementos de B que no están en A). */
     private void differenceBALogic() {
         SimpleSet<String> result = setB.differenceWith(setA);
         System.out.println("\nB difference A: " + formatSet(result));
         currentPhase = 0;
     }
 
+    /**
+     * Pregunta si el usuario quiere repetir la operación (add o remove).
+     * Actualiza currentPhase según la respuesta.
+     */
     private void repeatOperationQuestion(String operation) {
         boolean validInput = false;
         while (!validInput) {
@@ -195,6 +216,7 @@ public class SetExercise extends Exercise {
         }
     }
 
+    /** Muestra el estado actual de los dos conjuntos con su tamaño. */
     private void printSetsStatus() {
         System.out.println("\nSet A: " + formatSet(setA));
         System.out.println("Size: " + setA.size() + " | Empty: " + setA.isEmpty());
@@ -202,6 +224,7 @@ public class SetExercise extends Exercise {
         System.out.println("Size: " + setB.size() + " | Empty: " + setB.isEmpty());
     }
 
+    /** Convierte un conjunto en una cadena con formato {elem1, elem2, ...}. */
     private String formatSet(SimpleSet<String> set) {
         String result = "{";
         Object[] values = set.toArray();
@@ -213,6 +236,7 @@ public class SetExercise extends Exercise {
         return result;
     }
 
+    /** Capitaliza la primera letra de un texto (usado para mensajes en pantalla). */
     private String capitalize(String text) {
         if (text.length() == 0) return text;
         return text.substring(0, 1).toUpperCase() + text.substring(1);

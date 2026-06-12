@@ -12,6 +12,10 @@ package treeModule;
  */
 public class SimpleAVL<T extends Comparable<T>> extends SimpleBST<T> {
 
+    /**
+     * Igual que el BST pero, al volver de la recursión (camino de subida),
+     * recalcula la altura del nodo y lo rebalancea si hace falta.
+     */
     @Override
     protected TreeNode<T> insertRecursive(TreeNode<T> node, T element) {
         if (node == null) return new TreeNode<>(element);
@@ -24,6 +28,10 @@ public class SimpleAVL<T extends Comparable<T>> extends SimpleBST<T> {
         return rebalance(node);
     }
 
+    /**
+     * Igual que el BST pero, al subir de la recursión, recalcula alturas
+     * y rebalancea. Garantiza que el árbol sigue siendo AVL después del borrado.
+     */
     @Override
     protected TreeNode<T> removeRecursive(TreeNode<T> node, T element) {
         if (node == null) return null;
@@ -47,10 +55,12 @@ public class SimpleAVL<T extends Comparable<T>> extends SimpleBST<T> {
 
     // ── Alturas y factor de balance ─────────────────────────────────────────
 
+    /** Devuelve la altura del nodo; si es null devuelve -1 (convenio de clase). */
     private int height(TreeNode<T> node) {
         return node == null ? -1 : node.height;
     }
 
+    /** Recalcula la altura de un nodo a partir de las alturas de sus hijos. */
     private void updateHeight(TreeNode<T> node) {
         node.height = 1 + Math.max(height(node.left), height(node.right));
     }
@@ -80,21 +90,48 @@ public class SimpleAVL<T extends Comparable<T>> extends SimpleBST<T> {
 
     // ── Rotaciones ────────────────────────────────────────────────────────────
 
+    /**
+     * Rotación simple a la derecha (caso LL: el subárbol izquierdo pesa más).
+     *
+     * Antes:       y              Después:    x
+     *             / \                        / \
+     *            x   C                      A   y
+     *           / \                            / \
+     *          A   t2                         t2   C
+     *
+     * x sube a la raíz, y baja a la derecha de x.
+     * El subárbol t2 (que era hijo derecho de x) pasa a ser hijo izquierdo de y
+     * para mantener el orden BST.
+     */
     private TreeNode<T> rotateRight(TreeNode<T> y) {
         TreeNode<T> x  = y.left;
         TreeNode<T> t2 = x.right;
         x.right = y;
         y.left  = t2;
+        // Actualiza primero y (ahora es hijo) y después x (ahora es la nueva raíz)
         updateHeight(y);
         updateHeight(x);
         return x;
     }
 
+    /**
+     * Rotación simple a la izquierda (caso RR: el subárbol derecho pesa más).
+     *
+     * Antes:   x                  Después:     y
+     *         / \                             / \
+     *        A   y                           x   C
+     *           / \                         / \
+     *          t2   C                      A   t2
+     *
+     * y sube a la raíz, x baja a la izquierda de y.
+     * El subárbol t2 (hijo izquierdo de y) pasa a ser hijo derecho de x.
+     */
     private TreeNode<T> rotateLeft(TreeNode<T> x) {
         TreeNode<T> y  = x.right;
         TreeNode<T> t2 = y.left;
         y.left  = x;
         x.right = t2;
+        // Actualiza primero x (ahora es hijo) y después y (ahora es la nueva raíz)
         updateHeight(x);
         updateHeight(y);
         return y;

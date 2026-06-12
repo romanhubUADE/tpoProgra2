@@ -1,28 +1,36 @@
 package listModule;
 
+/**
+ * Implementación de SimpleList usando un arreglo interno de tamaño dinámico.
+ * Cuando el arreglo se llena, se duplica su capacidad automáticamente.
+ */
 public class SimpleArrayList<E> implements SimpleList<E> {
 
     private E[] elements;
     private int size;
-    private static final int DEFAULT_CAPACITY = 4;
+    private static final int DEFAULT_CAPACITY = 4; // capacidad inicial por defecto
 
+    /** Crea una lista vacía con la capacidad inicial por defecto (4). */
     public SimpleArrayList() {
         elements = (E[]) new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
+    /** Crea una lista vacía con la capacidad inicial indicada. */
     public SimpleArrayList(int initialCapacity) {
         elements = (E[]) new Object[initialCapacity];
         size = 0;
     }
 
 
+    /** Verifica si el arreglo necesita crecer antes de agregar newSize elementos. */
     private void validateSize(int newSize) {
         if (newSize > elements.length) {
             resize();
         }
     }
-    
+
+    /** Duplica la capacidad del arreglo copiando los elementos al nuevo. */
     private void resize() {
         E[] newArray = (E[]) new Object[elements.length * 2];
         for (int i = 0; i < size; i++) {
@@ -47,6 +55,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
 
     // ── Operaciones principales ───────────────────────────────────────────────
 
+    /** Agrega el elemento al final del arreglo. Devuelve true siempre. */
     @Override
     public boolean add(E element) {
         validateSize(size + 1);
@@ -55,6 +64,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
         return true;
     }
 
+    /** Inserta el elemento en la posición index, corriendo el resto hacia la derecha. */
     @Override
     public void add(int index, E element) {
         validateInsertIndex(index);
@@ -67,6 +77,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
         size++;
     }
 
+    /** Elimina el elemento en index, corre el resto hacia la izquierda y lo devuelve. */
     @Override
     public E remove(int index) {
         validateIndex(index);
@@ -80,6 +91,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
         return removed;
     }
 
+    /** Busca el objeto y elimina la primera ocurrencia. Devuelve true si lo encontró. */
     @Override
     public boolean remove(Object object) {
         for (int i = 0; i < size; i++) {
@@ -91,6 +103,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
         return false;
     }
 
+    /** Pone null en todas las posiciones y resetea el tamaño a 0. */
     @Override
     public void clear() {
         for (int i = 0; i < size; i++) {
@@ -113,6 +126,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
         return elements[index];
     }
 
+    /** Reemplaza el elemento en index por element y devuelve el valor que había antes. */
     @Override
     public E set(int index, E element) {
         validateIndex(index);

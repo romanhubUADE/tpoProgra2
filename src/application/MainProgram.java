@@ -12,14 +12,24 @@ import authModule.AuthExercise;
 import graphModule.FlightExercise;
 import treeModule.ContactsExercise;
 
+/**
+ * Punto de entrada del programa. Muestra el menú principal y delega
+ * la ejecución al ejercicio que elija el usuario.
+ */
 public class MainProgram {
     private boolean running = true;
+    // Referencia al ejercicio activo en cada iteración del menú
     private Exercise exercise;
 
+    /** Arranca la aplicación. */
     public static void main(String[] args) {
         new MainProgram().run();
     }
 
+    /**
+     * Bucle principal: muestra el menú de selección y corre el ejercicio elegido.
+     * Termina cuando el usuario elige la opción 0.
+     */
     private void run() {
         Scanner scanner = new Scanner(System.in);
         while (running) {
@@ -32,6 +42,10 @@ public class MainProgram {
         System.out.println("Program terminated.");
     }
 
+    /**
+     * Muestra el menú de opciones y crea el ejercicio correspondiente
+     * según la elección del usuario. Se llama recursivamente ante entrada inválida.
+     */
     private void selectExercise(Scanner scanner) {
         System.out.println("\nSelect an option:"
             + "\n0 - Terminate Program"
@@ -87,6 +101,7 @@ public class MainProgram {
                 break;
             default:
                 System.out.println("Invalid input, try again.");
+                // Vuelve a pedir entrada hasta que el usuario ingrese una opción válida
                 selectExercise(scanner);
                 break;
         }

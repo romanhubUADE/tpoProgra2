@@ -4,16 +4,23 @@ import application.Exercise;
 import java.util.Scanner;
 import listModule.SimpleList;
 
+/**
+ * Ejercicio interactivo para probar el TDA Diccionario por consola.
+ * Permite al usuario agregar, buscar, eliminar y listar entradas.
+ * Usa un sistema de fases para manejar el flujo de pantallas sin bucles anidados.
+ */
 public class DictionaryExercise extends Exercise {
-    private int currentPhase = 0;
-    private boolean firstTime = true;
+    private int currentPhase = 0; // fase actual del ejercicio (0 = menú principal)
+    private boolean firstTime = true; // para mostrar el saludo solo la primera vez
     private SimpleDictionary<String, String> dictionary;
 
+    /** Inicializa el ejercicio con la implementación elegida del diccionario. */
     public DictionaryExercise(Scanner scanner) {
         super(scanner);
         dictionary = new SimpleArrayDictionary<>(); // cambiar por SimpleLinkedDictionary o SimpleArrayDictionary para comparar
     }
 
+    /** Despacha la ejecución a la lógica de la fase actual. */
     @Override
     protected void exerciseLogic() {
         switch (currentPhase) {
@@ -28,6 +35,7 @@ public class DictionaryExercise extends Exercise {
         }
     }
 
+    /** Muestra el menú principal y lee la opción del usuario para cambiar de fase. */
     private void menuLogic() {
         if (firstTime) {
             firstTime = false;
@@ -63,6 +71,7 @@ public class DictionaryExercise extends Exercise {
         }
     }
 
+    /** Lee clave y valor del usuario, los inserta en el diccionario y pregunta si quiere agregar otro. */
     private void putLogic() {
         System.out.println("\nEnter a key:");
         String key = scanner.nextLine().trim();
@@ -98,6 +107,7 @@ public class DictionaryExercise extends Exercise {
         }
     }
 
+    /** Busca una clave ingresada por el usuario y muestra su valor (o avisa si no existe). */
     private void getLogic() {
         if (dictionary.isEmpty()) {
             System.out.println("\nDictionary is empty.");
@@ -117,6 +127,7 @@ public class DictionaryExercise extends Exercise {
         currentPhase = 0;
     }
 
+    /** Lee una clave del usuario y la elimina del diccionario. Pregunta si quiere eliminar otra. */
     private void removeLogic() {
         if (dictionary.isEmpty()) {
             System.out.println("\nDictionary is empty.");
@@ -146,6 +157,7 @@ public class DictionaryExercise extends Exercise {
         }
     }
 
+    /** Informa si una clave existe en el diccionario. */
     private void containsKeyLogic() {
         System.out.println("\nEnter a key:");
         String key = scanner.nextLine();
@@ -153,16 +165,19 @@ public class DictionaryExercise extends Exercise {
         currentPhase = 0;
     }
 
+    /** Muestra todas las claves del diccionario formateadas. */
     private void keysLogic() {
         System.out.println("\nKeys: " + formatList(dictionary.keys()));
         currentPhase = 0;
     }
 
+    /** Muestra todos los valores del diccionario formateados. */
     private void valuesLogic() {
         System.out.println("\nValues: " + formatArray(dictionary.values()));
         currentPhase = 0;
     }
 
+    /** Limpia el diccionario si no está vacío; avisa al usuario en ambos casos. */
     private void clearLogic() {
         if (!dictionary.isEmpty()) {
             dictionary.clear();
@@ -173,10 +188,12 @@ public class DictionaryExercise extends Exercise {
         currentPhase = 0;
     }
 
+    /** Imprime el tamaño actual y si el diccionario está vacío. */
     private void printStatus() {
         System.out.println("Size: " + dictionary.size() + " | Empty: " + dictionary.isEmpty());
     }
 
+    /** Convierte un arreglo en formato "{val1, val2, ...}" para mostrar por pantalla. */
     private String formatArray(Object[] array) {
         String result = "{";
         for (int i = 0; i < array.length; i++) {
@@ -187,6 +204,7 @@ public class DictionaryExercise extends Exercise {
         return result;
     }
 
+    /** Convierte una SimpleList en formato "{val1, val2, ...}" para mostrar por pantalla. */
     private String formatList(SimpleList<?> list) {
         String result = "{";
         for (int i = 0; i < list.size(); i++) {

@@ -3,16 +3,25 @@ package stackModule;
 import application.Exercise;
 import java.util.Scanner;
 
+/**
+ * Ejercicio interactivo para probar las operaciones de una SimpleStack.
+ * El usuario puede apilar (push), desapilar (pop), ver el tope (peek) y limpiar la pila.
+ */
 public class StackExercise extends Exercise {
-    private int currentPhase = 0;
+    private int currentPhase = 0; // controla en qué paso del flujo estamos
     private boolean firstTime = true;
     private SimpleStack<String> stack;
 
+    /** Inicializa el ejercicio con una SimpleArrayStack (se puede cambiar por SimpleLinkedStack). */
     public StackExercise(Scanner scanner) {
         super(scanner);
         stack = new SimpleArrayStack<>(); // cambiar por SimpleLinkedStack para comparar
     }
 
+    /**
+     * Punto de entrada del bucle del ejercicio.
+     * Delega a la lógica correspondiente según la fase actual.
+     */
     @Override
     protected void exerciseLogic() {
         switch (currentPhase) {
@@ -24,6 +33,7 @@ public class StackExercise extends Exercise {
         }
     }
 
+    /** Muestra el menú principal y lee la opción del usuario. */
     private void menuLogic() {
         if (firstTime) {
             firstTime = false;
@@ -53,6 +63,7 @@ public class StackExercise extends Exercise {
         }
     }
 
+    /** Pide un String al usuario y lo apila en el tope. Permite apilar varios seguidos. */
     private void pushLogic() {
         System.out.println("\nEnter a String to push:");
         String value = scanner.nextLine().trim();
@@ -75,6 +86,7 @@ public class StackExercise extends Exercise {
         }
     }
 
+    /** Retira el tope de la pila y lo muestra. Permite desapilar varios seguidos. */
     private void popLogic() {
         if (stack.isEmpty()) {
             System.out.println("\nStack is empty.");
@@ -95,6 +107,7 @@ public class StackExercise extends Exercise {
         }
     }
 
+    /** Muestra el elemento del tope sin retirarlo y vuelve al menú. */
     private void peekLogic() {
         if (stack.isEmpty()) {
             System.out.println("\nStack is empty.");
@@ -104,6 +117,7 @@ public class StackExercise extends Exercise {
         currentPhase = 0; // peek siempre vuelve al menú
     }
 
+    /** Vacía la pila si tiene elementos y vuelve al menú. */
     private void clearLogic() {
         if (!stack.isEmpty()) {
             stack.clear();
@@ -114,6 +128,7 @@ public class StackExercise extends Exercise {
         currentPhase = 0;
     }
 
+    /** Muestra el tamaño actual y si la pila está vacía. */
     private void printStatus() {
         System.out.println("Size: " + stack.size() + " | Empty: " + stack.isEmpty());
     }

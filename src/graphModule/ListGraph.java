@@ -5,7 +5,12 @@ import dictionaryModule.SimpleDictionary;
 import listModule.SimpleLinkedList;
 import listModule.SimpleList;
 
+/**
+ * Implementación del TDA Grafo usando listas de adyacencia.
+ * Internamente usa un diccionario: cada vértice mapea a la lista de aristas que salen de él.
+ */
 public class ListGraph<T> implements Graph<T> {
+    // Diccionario: vértice -> lista de aristas salientes
     private SimpleDictionary<T, SimpleList<Edge<T>>> adjacencyList;
 
     public ListGraph() {
@@ -30,6 +35,7 @@ public class ListGraph<T> implements Graph<T> {
     @Override
     public boolean addVertex(T vertex) {
         if (containsVertex(vertex)) return false;
+        // Cada vértice nuevo arranca con una lista de vecinos vacía.
         adjacencyList.put(vertex, new SimpleLinkedList<Edge<T>>());
         return true;
     }
@@ -38,6 +44,7 @@ public class ListGraph<T> implements Graph<T> {
     public boolean removeVertex(T vertex) {
         if (!containsVertex(vertex)) return false;
 
+        // Primero eliminamos la entrada del vértice, luego limpiamos aristas que apuntan a él.
         adjacencyList.remove(vertex);
         SimpleList<T> vertices = vertices();
         for (int i = 0; i < vertices.size(); i++)
@@ -57,6 +64,10 @@ public class ListGraph<T> implements Graph<T> {
         return targetEdge.weight;
     }
 
+    /**
+     * Busca la arista que va de 'from' a 'to' recorriendo la lista de vecinos.
+     * Devuelve null si 'from' no existe o no hay arista hacia 'to'.
+     */
     private Edge<T> getEdge(T from, T to) {
         if (!containsVertex(from)) return null;
 
@@ -69,15 +80,18 @@ public class ListGraph<T> implements Graph<T> {
 
     @Override
     public boolean addEdge(T from, T to, int weight) {
+        // Si alguno de los dos vértices no existe, lo creamos automáticamente.
         addVertex(from);
         addVertex(to);
         Edge<T> edge = getEdge(from, to);
 
         if (edge == null) {
+            // Arista nueva: la agregamos a la lista de vecinos de 'from'.
             adjacencyList.get(from).add(new Edge<T>(to, weight));
             return true;
         }
 
+        // La arista ya existe: solo actualizamos el peso si cambió.
         if (edge.weight != weight) {
             edge.weight = weight;
             return true;
