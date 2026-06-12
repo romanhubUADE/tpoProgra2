@@ -10,7 +10,7 @@ public class ListExercise extends Exercise {
 
     public ListExercise(Scanner scanner) {
         super(scanner);
-        list = new SimpleArrayList<>(); // cambiar por SimpleLinkedList para comparar
+        list = new SimpleArrayList<>();
     }
 
     @Override
@@ -104,6 +104,7 @@ public class ListExercise extends Exercise {
                 }
             }
         } catch (NumberFormatException e) {
+
             System.out.println("Invalid input.");
             currentPhase = 0;
         }

@@ -72,6 +72,7 @@ public class SimpleArraySet<E> implements SimpleSet<E> {
 
     @Override
     public void clear() {
+
         for (int i = 0; i < size; i++) {
             elements[i] = null;
         }

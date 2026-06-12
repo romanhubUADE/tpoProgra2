@@ -13,13 +13,11 @@ public class DijkstraSolver {
     public static <T> SimpleDictionary<T, PathInfo<T>> dijkstraAllNodes(Graph<T> graph, T origin) {
         SimpleDictionary<T, PathInfo<T>> result = new SimpleArrayDictionary<T, PathInfo<T>>();
 
-        // Si el origen no es un vértice del grafo, no hay caminos posibles.
         if (!graph.containsVertex(origin)) return result;
 
         SimpleList<T> vertices = graph.vertices();
         int vertexCount = vertices.size();
 
-        // Todos arrancan con costo infinito y sin predecesor.
         for (int i = 0; i < vertexCount; i++) {
             result.put(vertices.get(i), new PathInfo<T>(null, Integer.MAX_VALUE));
         }
@@ -29,7 +27,7 @@ public class DijkstraSolver {
         SimpleSet<T> visited = new SimpleArraySet<T>();
 
         unvisited.enqueue(origin, 0);
-        // mientras haya nodos no visitados
+
         while (!unvisited.isEmpty()) {
             T current = unvisited.dequeue();
             if (visited.contains(current))

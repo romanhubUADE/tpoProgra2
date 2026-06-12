@@ -12,8 +12,6 @@ public class SimpleLinkedList<E> implements SimpleList<E> {
         size = 0;
     }
 
-    // ── Helpers privados ─────────────────────────────────────────────────────
-
     private void validateIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
@@ -26,16 +24,17 @@ public class SimpleLinkedList<E> implements SimpleList<E> {
         }
     }
 
-    // Navega al nodo del índice dado, empezando desde el extremo más cercano
     private LinkedNode<E> getNodeByIndex(int index) {
         validateIndex(index);
         LinkedNode<E> current;
         if (index < size / 2) {
+
             current = first;
             for (int i = 0; i < index; i++) {
                 current = current.next;
             }
         } else {
+
             current = last;
             for (int i = size - 1; i > index; i--) {
                 current = current.prev;
@@ -44,33 +43,36 @@ public class SimpleLinkedList<E> implements SimpleList<E> {
         return current;
     }
 
-    // Desconecta un nodo y repara las conexiones, maneja los 4 casos borde
     private void removeAndReconnect(LinkedNode<E> toRemove) {
         if (toRemove == first && toRemove == last) {
+
             first = null;
             last = null;
         } else if (toRemove == first) {
+
             first = toRemove.next;
             first.prev = null;
         } else if (toRemove == last) {
+
             last = toRemove.prev;
             last.next = null;
         } else {
+
             toRemove.prev.next = toRemove.next;
             toRemove.next.prev = toRemove.prev;
         }
         size--;
     }
 
-    // ── Operaciones principales ───────────────────────────────────────────────
-
     @Override
     public boolean add(E element) {
         LinkedNode<E> newNode = new LinkedNode<>(element);
         if (isEmpty()) {
+
             first = newNode;
             last = newNode;
         } else {
+
             newNode.prev = last;
             last.next = newNode;
             last = newNode;
@@ -83,13 +85,13 @@ public class SimpleLinkedList<E> implements SimpleList<E> {
     public void add(int index, E element) {
         validateInsertIndex(index);
         if (index == size) {
+
             add(element);
             return;
         }
         LinkedNode<E> current = getNodeByIndex(index);
         LinkedNode<E> newNode = new LinkedNode<>(element);
 
-        // Asignar prev y next del nuevo nodo ANTES de modificar los existentes
         newNode.prev = current.prev;
         newNode.next = current;
 
@@ -113,7 +115,7 @@ public class SimpleLinkedList<E> implements SimpleList<E> {
     @Override
     public boolean remove(Object object) {
         LinkedNode<E> current = first;
-        while (current != null) { // != null, no equals — null no puede ejecutar métodos
+        while (current != null) {
             if (current.value.equals(object)) {
                 removeAndReconnect(current);
                 return true;

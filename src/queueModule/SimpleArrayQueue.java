@@ -34,6 +34,7 @@ public class SimpleArrayQueue<E> implements SimpleQueue<E> {
     public E dequeue() {
         if (isEmpty()) throw new NoSuchElementException("Queue is empty.");
         E value = elements[0];
+
         for (int i = 0; i < size - 1; i++) elements[i] = elements[i + 1];
         elements[size - 1] = null;
         size--;

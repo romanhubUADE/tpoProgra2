@@ -16,6 +16,7 @@ public class TestExercise extends Exercise {
         String userInput = scanner.nextLine();
         switch (userInput) {
             case "0":
+
                 running = false;
                 break;
             default:

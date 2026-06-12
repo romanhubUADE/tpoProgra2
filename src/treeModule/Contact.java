@@ -1,6 +1,5 @@
 package treeModule;
 
-
 public class Contact implements Comparable<Contact> {
 
     private String name;
@@ -51,4 +50,3 @@ public class Contact implements Comparable<Contact> {
         return String.format("%-25s | Phone: %-15s | Email: %s", name, phone, email);
     }
 }
-

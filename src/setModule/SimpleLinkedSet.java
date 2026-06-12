@@ -24,9 +24,11 @@ public class SimpleLinkedSet<E> implements SimpleSet<E> {
 
         LinkedNode<E> newNode = new LinkedNode<>(element);
         if (isEmpty()) {
+
             first = newNode;
             last = newNode;
         } else {
+
             newNode.prev = last;
             last.next = newNode;
             last = newNode;
@@ -43,15 +45,19 @@ public class SimpleLinkedSet<E> implements SimpleSet<E> {
         while (current != null) {
             if (same(current.value, element)) {
                 if (current == first && current == last) {
+
                     first = null;
                     last = null;
                 } else if (current == first) {
+
                     first = current.next;
                     first.prev = null;
                 } else if (current == last) {
+
                     last = current.prev;
                     last.next = null;
                 } else {
+
                     current.prev.next = current.next;
                     current.next.prev = current.prev;
                 }
@@ -87,6 +93,7 @@ public class SimpleLinkedSet<E> implements SimpleSet<E> {
 
     @Override
     public void clear() {
+
         first = null;
         last = null;
         size = 0;

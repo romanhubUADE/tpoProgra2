@@ -5,8 +5,8 @@ import listModule.LinkedNode;
 
 public class SimpleLinkedQueue<E> implements SimpleQueue<E> {
 
-    private LinkedNode<E> first; // el frente de la cola
-    private LinkedNode<E> last;  // el final de la cola
+    private LinkedNode<E> first;
+    private LinkedNode<E> last;
     private int size;
 
     public SimpleLinkedQueue() {
@@ -22,6 +22,7 @@ public class SimpleLinkedQueue<E> implements SimpleQueue<E> {
             first = newNode;
             last = newNode;
         } else {
+
             newNode.prev = last;
             last.next = newNode;
             last = newNode;

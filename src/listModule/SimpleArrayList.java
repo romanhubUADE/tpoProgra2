@@ -16,13 +16,12 @@ public class SimpleArrayList<E> implements SimpleList<E> {
         size = 0;
     }
 
-
     private void validateSize(int newSize) {
         if (newSize > elements.length) {
             resize();
         }
     }
-    
+
     private void resize() {
         E[] newArray = (E[]) new Object[elements.length * 2];
         for (int i = 0; i < size; i++) {
@@ -31,21 +30,17 @@ public class SimpleArrayList<E> implements SimpleList<E> {
         elements = newArray;
     }
 
-    // Para get, set, remove(int): 0 <= index < size
     private void validateIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
 
-    // Para add(int, E): 0 <= index <= size (permite insertar al final)
     private void validateInsertIndex(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
     }
-
-    // ── Operaciones principales ───────────────────────────────────────────────
 
     @Override
     public boolean add(E element) {
@@ -59,7 +54,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
     public void add(int index, E element) {
         validateInsertIndex(index);
         validateSize(size + 1);
-        // Correr elementos a la derecha desde el final hasta index
+
         for (int i = size; i > index; i--) {
             elements[i] = elements[i - 1];
         }
@@ -71,11 +66,11 @@ public class SimpleArrayList<E> implements SimpleList<E> {
     public E remove(int index) {
         validateIndex(index);
         E removed = elements[index];
-        // Correr elementos a la izquierda
+
         for (int i = index; i < size - 1; i++) {
             elements[i] = elements[i + 1];
         }
-        elements[size - 1] = null; // limpiar referencia colgante
+        elements[size - 1] = null;
         size--;
         return removed;
     }

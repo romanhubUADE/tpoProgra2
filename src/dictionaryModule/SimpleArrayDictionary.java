@@ -43,10 +43,10 @@ public class SimpleArrayDictionary<K, V> implements SimpleDictionary<K, V> {
     @Override
     public V put(K key, V value) {
         if (key == null) throw new NullPointerException("key cannot be null");
-       // if (value == null) throw new NullPointerException("value cannot be null");
 
         int index = indexOf(key);
         if (index != -1) {
+
             V previous = values[index];
             values[index] = value;
             return previous;

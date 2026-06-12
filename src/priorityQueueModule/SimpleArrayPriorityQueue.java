@@ -38,6 +38,7 @@ public class SimpleArrayPriorityQueue<E> implements SimplePriorityQueue<E> {
         validateSize(size + 1);
 
         int insertIndex = size;
+
         for (int i = size - 1; i >= 0; i--) {
             if (priority >= priorities[i]) break;
             elements[i + 1] = elements[i];
@@ -58,6 +59,7 @@ public class SimpleArrayPriorityQueue<E> implements SimplePriorityQueue<E> {
             elements[i] = elements[i + 1];
             priorities[i] = priorities[i + 1];
         }
+
         elements[size - 1] = null;
         priorities[size - 1] = 0;
         size--;

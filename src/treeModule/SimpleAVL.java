@@ -1,15 +1,5 @@
 package treeModule;
 
-/**
- * AVL Tree: un BST que se mantiene siempre balanceado.
- *
- * Hereda toda la lógica de {@link SimpleBST} (insert/remove/search/inOrder) y solo
- * overridea la recursión de inserción y remoción para, después de cada cambio,
- * actualizar alturas y rebalancear con rotaciones. El factor de balance de cada
- * nodo queda siempre en {-1, 0, 1}.
- *
- * Convención de altura (igual que en clase): altura(null) = -1, una hoja = 0.
- */
 public class SimpleAVL<T extends Comparable<T>> extends SimpleBST<T> {
 
     @Override
@@ -45,8 +35,6 @@ public class SimpleAVL<T extends Comparable<T>> extends SimpleBST<T> {
         return rebalance(node);
     }
 
-    // ── Alturas y factor de balance ─────────────────────────────────────────
-
     private int height(TreeNode<T> node) {
         return node == null ? -1 : node.height;
     }
@@ -55,36 +43,31 @@ public class SimpleAVL<T extends Comparable<T>> extends SimpleBST<T> {
         node.height = 1 + Math.max(height(node.left), height(node.right));
     }
 
-    /** Factor de balance: altura del subárbol izquierdo menos la del derecho. */
     private int balanceFactor(TreeNode<T> node) {
         return node == null ? 0 : height(node.left) - height(node.right);
     }
 
-    // ── Rebalanceo ──────────────────────────────────────────────────────────
-
     private TreeNode<T> rebalance(TreeNode<T> node) {
         int balance = balanceFactor(node);
 
-        // Pesado a la izquierda
         if (balance > 1) {
-            if (balanceFactor(node.left) < 0) node.left = rotateLeft(node.left); // Caso LR
-            return rotateRight(node);                                            // Caso LL
+            if (balanceFactor(node.left) < 0) node.left = rotateLeft(node.left);
+            return rotateRight(node);
         }
-        // Pesado a la derecha
-        if (balance < -1) {
-            if (balanceFactor(node.right) > 0) node.right = rotateRight(node.right); // Caso RL
-            return rotateLeft(node);                                                 // Caso RR
-        }
-        return node; // ya está balanceado
-    }
 
-    // ── Rotaciones ────────────────────────────────────────────────────────────
+        if (balance < -1) {
+            if (balanceFactor(node.right) > 0) node.right = rotateRight(node.right);
+            return rotateLeft(node);
+        }
+        return node;
+    }
 
     private TreeNode<T> rotateRight(TreeNode<T> y) {
         TreeNode<T> x  = y.left;
         TreeNode<T> t2 = x.right;
         x.right = y;
         y.left  = t2;
+
         updateHeight(y);
         updateHeight(x);
         return x;
@@ -95,6 +78,7 @@ public class SimpleAVL<T extends Comparable<T>> extends SimpleBST<T> {
         TreeNode<T> t2 = y.left;
         y.left  = x;
         x.right = t2;
+
         updateHeight(x);
         updateHeight(y);
         return y;

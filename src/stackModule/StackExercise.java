@@ -10,7 +10,7 @@ public class StackExercise extends Exercise {
 
     public StackExercise(Scanner scanner) {
         super(scanner);
-        stack = new SimpleArrayStack<>(); // cambiar por SimpleLinkedStack para comparar
+        stack = new SimpleArrayStack<>();
     }
 
     @Override
@@ -101,7 +101,7 @@ public class StackExercise extends Exercise {
         } else {
             System.out.println("\nTop element: " + stack.peek());
         }
-        currentPhase = 0; // peek siempre vuelve al menú
+        currentPhase = 0;
     }
 
     private void clearLogic() {

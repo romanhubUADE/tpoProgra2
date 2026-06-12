@@ -5,7 +5,7 @@ import listModule.LinkedNode;
 
 public class SimpleLinkedStack<E> implements SimpleStack<E> {
 
-    private LinkedNode<E> last; // el tope de la pila
+    private LinkedNode<E> last;
     private int size;
 
     public SimpleLinkedStack() {
@@ -17,6 +17,7 @@ public class SimpleLinkedStack<E> implements SimpleStack<E> {
     public void push(E element) {
         LinkedNode<E> newNode = new LinkedNode<>(element);
         if (!isEmpty()) {
+
             newNode.prev = last;
             last.next = newNode;
         }
@@ -29,6 +30,7 @@ public class SimpleLinkedStack<E> implements SimpleStack<E> {
         if (isEmpty()) throw new NoSuchElementException("Stack is empty.");
         E value = last.value;
         if (size == 1) {
+
             last = null;
         } else {
             last = last.prev;

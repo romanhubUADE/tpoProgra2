@@ -18,7 +18,6 @@ public class ContactsExercise extends Exercise {
     private int currentPhase = PHASE_MENU;
     private boolean firstTime = true;
 
-    // TP09: el árbol es un AVL (se autobalancea en alta y baja).
     private final SimpleAVL<Contact> avl;
     private Contact selectedContact;
 
@@ -128,8 +127,6 @@ public class ContactsExercise extends Exercise {
         }
     }
 
-    // ── Edit ──────────────────────────────────────────────────────────────────
-
     private void editMenuLogic() {
         System.out.println("\n-- Edit Contact --");
         System.out.println("Current:\n  " + selectedContact);
@@ -167,6 +164,7 @@ public class ContactsExercise extends Exercise {
         }
 
         try {
+
             avl.remove(selectedContact);
             selectedContact.setName(newName);
             avl.insert(selectedContact);
@@ -244,7 +242,6 @@ public class ContactsExercise extends Exercise {
             avl.clear();
         }
 
-        // Plantel campeón del mundo - Qatar 2022 (el teléfono lleva el dorsal real).
         avl.insert(new Contact("Franco Armani",       "+54 9 11 2022-0001", "franco.armani@afa.org.ar"));
         avl.insert(new Contact("Juan Foyth",          "+54 9 11 2022-0002", "juan.foyth@afa.org.ar"));
         avl.insert(new Contact("Nicolas Tagliafico",  "+54 9 11 2022-0003", "nicolas.tagliafico@afa.org.ar"));
@@ -285,4 +282,3 @@ public class ContactsExercise extends Exercise {
         }
     }
 }
-

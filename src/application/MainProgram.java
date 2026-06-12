@@ -14,6 +14,7 @@ import treeModule.ContactsExercise;
 
 public class MainProgram {
     private boolean running = true;
+
     private Exercise exercise;
 
     public static void main(String[] args) {
@@ -87,6 +88,7 @@ public class MainProgram {
                 break;
             default:
                 System.out.println("Invalid input, try again.");
+
                 selectExercise(scanner);
                 break;
         }

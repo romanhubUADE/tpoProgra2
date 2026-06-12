@@ -6,6 +6,7 @@ import listModule.SimpleLinkedList;
 import listModule.SimpleList;
 
 public class ListGraph<T> implements Graph<T> {
+
     private SimpleDictionary<T, SimpleList<Edge<T>>> adjacencyList;
 
     public ListGraph() {
@@ -30,6 +31,7 @@ public class ListGraph<T> implements Graph<T> {
     @Override
     public boolean addVertex(T vertex) {
         if (containsVertex(vertex)) return false;
+
         adjacencyList.put(vertex, new SimpleLinkedList<Edge<T>>());
         return true;
     }
@@ -69,11 +71,13 @@ public class ListGraph<T> implements Graph<T> {
 
     @Override
     public boolean addEdge(T from, T to, int weight) {
+
         addVertex(from);
         addVertex(to);
         Edge<T> edge = getEdge(from, to);
 
         if (edge == null) {
+
             adjacencyList.get(from).add(new Edge<T>(to, weight));
             return true;
         }

@@ -7,20 +7,10 @@ import listModule.SimpleList;
 import stackModule.SimpleLinkedStack;
 import stackModule.SimpleStack;
 
-/**
- * TP10 - Aplicación de consola: planificador de rutas de vuelo (GPS de ciudades).
- *
- * El mapa es un {@link Graph} ponderado: los vértices son ciudades (su nombre) y
- * las aristas son vuelos con su costo. Dado un origen y un destino, calcula la
- * ruta más barata (con escalas) usando {@link DijkstraSolver}.
- *
- * Reúne en una sola app el TDA Graph (carga/edición del mapa) y el algoritmo de
- * Dijkstra (pathfinding), que es lo que pide el TP10.
- */
 public class FlightExercise extends Exercise {
     private int currentPhase = 0;
     private boolean firstTime = true;
-    private boolean graphChanged = true; // controla cuándo reimprimir el mapa (inicio / tras editar)
+    private boolean graphChanged = true;
 
     private Graph<String> graph;
 
@@ -30,10 +20,6 @@ public class FlightExercise extends Exercise {
         preloadFlights();
     }
 
-    /**
-     * Carga una red de vuelos ya hecha al iniciar la app (requisito del TP).
-     * Cada vuelo se agrega en ambos sentidos (ida y vuelta con el mismo costo).
-     */
     private void preloadFlights() {
         addFlight("Buenos Aires", "Santiago", 120);
         addFlight("Buenos Aires", "Sao Paulo", 150);
@@ -48,17 +34,11 @@ public class FlightExercise extends Exercise {
         addFlight("Nueva York", "Londres", 550);
     }
 
-    /** Agrega un vuelo ida y vuelta (dos aristas dirigidas con el mismo costo). */
     private void addFlight(String a, String b, int cost) {
         graph.addEdge(a, b, cost);
         graph.addEdge(b, a, cost);
     }
 
-    /**
-     * Busca una ciudad por nombre sin importar mayúsculas/minúsculas, reutilizando
-     * los vértices del grafo. Devuelve el nombre tal como está guardado (canónico)
-     * o null si no existe. Así contemplamos inputs como "miami" o "MIAMI".
-     */
     private String resolveCity(String input) {
         SimpleList<String> cities = graph.vertices();
         for (int i = 0; i < cities.size(); i++) {
@@ -84,7 +64,7 @@ public class FlightExercise extends Exercise {
             firstTime = false;
             System.out.println("\nWelcome to the Flight Route Planner (TP10 - Graph + Dijkstra).");
         }
-        // El mapa se imprime al inicio y después de cada edición (requisito del TP).
+
         if (graphChanged) {
             printGraph();
             graphChanged = false;
@@ -113,7 +93,6 @@ public class FlightExercise extends Exercise {
         }
     }
 
-    /** Núcleo del TP: ruta más corta con Dijkstra + reconstrucción de las escalas. */
     private void findRouteLogic() {
         currentPhase = 0;
 
@@ -146,16 +125,12 @@ public class FlightExercise extends Exercise {
             DijkstraSolver.dijkstraAllNodes(graph, origin);
 
         PathInfo<String> destInfo = result.get(destination);
-        // Caso "no alcanzable" (como A -> E en la diapo): el destino quedó con costo
-        // infinito y previous null. Hay que cortar ACÁ, antes de reconstruir, porque
-        // si siguiéramos los 'previous' nos toparíamos con null y no habría camino real.
+
         if (destInfo == null || destInfo.cost == Integer.MAX_VALUE) {
             System.out.println("No route from " + origin + " to " + destination + ".");
             return;
         }
 
-        // Reconstruyo el camino desde el destino hacia el origen, apilando cada paso.
-        // Como el Stack es LIFO, al desapilar sale en orden origen -> destino.
         SimpleStack<String> path = new SimpleLinkedStack<>();
         String step = destination;
         while (step != null) {
@@ -164,7 +139,7 @@ public class FlightExercise extends Exercise {
             step = result.get(step).previous;
         }
 
-        int stops = path.size() - 2; // pasos intermedios, sin contar origen ni destino
+        int stops = path.size() - 2;
 
         StringBuilder route = new StringBuilder();
         while (!path.isEmpty()) {
@@ -223,7 +198,6 @@ public class FlightExercise extends Exercise {
             return;
         }
 
-        // Si la ciudad ya existe uso su nombre canónico; si no, se crea con lo ingresado.
         String fromCity = resolveCity(fromInput);
         if (fromCity == null) fromCity = fromInput;
         String toCity = resolveCity(toInput);
@@ -268,7 +242,7 @@ public class FlightExercise extends Exercise {
             System.out.println("Flight " + fromInput + " <-> " + toInput + " not found.");
             return;
         }
-        // Quito ambos sentidos del vuelo.
+
         boolean removed = graph.removeEdge(fromCity, toCity);
         removed = graph.removeEdge(toCity, fromCity) || removed;
         if (removed) {
@@ -279,7 +253,6 @@ public class FlightExercise extends Exercise {
         }
     }
 
-    /** Imprime el mapa arista por arista, como pide la consigna (A -> B: peso). */
     private void printGraph() {
         SimpleList<String> cities = graph.vertices();
         if (cities.size() == 0) {

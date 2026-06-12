@@ -11,7 +11,7 @@ public class DictionaryExercise extends Exercise {
 
     public DictionaryExercise(Scanner scanner) {
         super(scanner);
-        dictionary = new SimpleArrayDictionary<>(); // cambiar por SimpleLinkedDictionary o SimpleArrayDictionary para comparar
+        dictionary = new SimpleArrayDictionary<>();
     }
 
     @Override

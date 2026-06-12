@@ -21,6 +21,7 @@ public class SimpleLinkedDictionary<K, V> implements SimpleDictionary<K, V> {
         SimpleDictionaryNode<K, V> current = first;
         while (current != null) {
             if (current.key.equals(key)) {
+
                 V previous = current.value;
                 current.value = value;
                 return previous;

@@ -10,7 +10,7 @@ public class QueueExercise extends Exercise {
 
     public QueueExercise(Scanner scanner) {
         super(scanner);
-        queue = new SimpleArrayQueue<>(); // cambiar por SimpleLinkedQueue o SimpleArrayQueue para comparar
+        queue = new SimpleArrayQueue<>();
     }
 
     @Override
@@ -101,7 +101,7 @@ public class QueueExercise extends Exercise {
         } else {
             System.out.println("\nFront element: " + queue.peek());
         }
-        currentPhase = 0; // peek siempre vuelve al menú
+        currentPhase = 0;
     }
 
     private void clearLogic() {

@@ -118,6 +118,7 @@ public class EmailExercise extends Exercise {
         );
         Tab tab = readTab();
         if (tab == null) {
+
             currentPhase = 2;
             return;
         }

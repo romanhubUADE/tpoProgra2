@@ -32,6 +32,7 @@ public class EmailSystem {
     }
 
     public Email[] listInbox() { return listQueue(inbox); }
+
     public Email[] listTab(Tab tab) { return listQueue(getQueueForTab(tab)); }
 
     public boolean isInboxEmpty() { return inbox.isEmpty(); }

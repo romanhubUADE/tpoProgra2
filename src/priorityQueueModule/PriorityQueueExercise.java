@@ -10,7 +10,7 @@ public class PriorityQueueExercise extends Exercise {
 
     public PriorityQueueExercise(Scanner scanner) {
         super(scanner);
-        queue = new SimpleArrayPriorityQueue<>(); // cambiar por SimpleLinkedPriorityQueue o SimpleArrayPriorityQueue para comparar
+        queue = new SimpleArrayPriorityQueue<>();
     }
 
     @Override

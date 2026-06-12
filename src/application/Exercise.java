@@ -3,6 +3,7 @@ package application;
 import java.util.Scanner;
 
 public abstract class Exercise {
+
     protected boolean running = true;
     protected Scanner scanner;
 
@@ -14,6 +15,7 @@ public abstract class Exercise {
         while (running) {
             exerciseLogic();
         }
+
         running = true;
     }
 

@@ -2,7 +2,6 @@ package treeModule;
 
 import java.util.NoSuchElementException;
 
-
 public class SimpleBST<T extends Comparable<T>> {
 
     private TreeNode<T> root;
@@ -40,6 +39,7 @@ public class SimpleBST<T extends Comparable<T>> {
         } else {
             if (node.left  == null) return node.right;
             if (node.right == null) return node.left;
+
             T successor = findMin(node.right);
             node.value = successor;
             node.right = removeRecursive(node.right, successor);
@@ -87,4 +87,3 @@ public class SimpleBST<T extends Comparable<T>> {
     public boolean isEmpty() { return size == 0; }
     public void    clear()   { root = null; size = 0; }
 }
-

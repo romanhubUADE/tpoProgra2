@@ -23,19 +23,23 @@ public class SimpleLinkedPriorityQueue<E> implements SimplePriorityQueue<E> {
             first = newNode;
             last = newNode;
         } else if (priority < first.priority) {
+
             newNode.next = first;
             first.prev = newNode;
             first = newNode;
         } else {
+
             PriorityLinkedNode<E> current = last;
             while (current.prev != null && priority < current.priority) {
                 current = current.prev;
             }
+
             newNode.next = current.next;
             newNode.prev = current;
             if (current.next != null) {
                 current.next.prev = newNode;
             } else {
+
                 last = newNode;
             }
             current.next = newNode;
