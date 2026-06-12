@@ -3,16 +3,23 @@ package queueModule;
 import application.Exercise;
 import java.util.Scanner;
 
+/**
+ * Ejercicio interactivo para probar el TDA Cola por consola.
+ * Permite encolar, desencolar, ver el frente y limpiar la cola.
+ * Usa un sistema de fases para navegar entre pantallas sin bucles anidados.
+ */
 public class QueueExercise extends Exercise {
-    private int currentPhase = 0;
-    private boolean firstTime = true;
+    private int currentPhase = 0; // fase actual (0 = menú principal)
+    private boolean firstTime = true; // para mostrar el saludo solo la primera vez
     private SimpleQueue<String> queue;
 
+    /** Inicializa el ejercicio con la implementación elegida de la cola. */
     public QueueExercise(Scanner scanner) {
         super(scanner);
         queue = new SimpleArrayQueue<>(); // cambiar por SimpleLinkedQueue o SimpleArrayQueue para comparar
     }
 
+    /** Despacha la ejecución a la lógica de la fase actual. */
     @Override
     protected void exerciseLogic() {
         switch (currentPhase) {
@@ -24,6 +31,7 @@ public class QueueExercise extends Exercise {
         }
     }
 
+    /** Muestra el menú principal y lee la opción del usuario para cambiar de fase. */
     private void menuLogic() {
         if (firstTime) {
             firstTime = false;
@@ -53,6 +61,7 @@ public class QueueExercise extends Exercise {
         }
     }
 
+    /** Lee un String del usuario y lo encola. Pregunta si quiere agregar otro. */
     private void enqueueLogic() {
         System.out.println("\nEnter a String to enqueue:");
         String value = scanner.nextLine().trim();
@@ -75,6 +84,7 @@ public class QueueExercise extends Exercise {
         }
     }
 
+    /** Desencola el elemento del frente y lo muestra. Pregunta si quiere desencolar otro. */
     private void dequeueLogic() {
         if (queue.isEmpty()) {
             System.out.println("\nQueue is empty.");
@@ -95,6 +105,7 @@ public class QueueExercise extends Exercise {
         }
     }
 
+    /** Muestra el elemento del frente sin sacarlo de la cola. */
     private void peekLogic() {
         if (queue.isEmpty()) {
             System.out.println("\nQueue is empty.");
@@ -104,6 +115,7 @@ public class QueueExercise extends Exercise {
         currentPhase = 0; // peek siempre vuelve al menú
     }
 
+    /** Limpia la cola si no está vacía; avisa al usuario en ambos casos. */
     private void clearLogic() {
         if (!queue.isEmpty()) {
             queue.clear();
@@ -114,6 +126,7 @@ public class QueueExercise extends Exercise {
         currentPhase = 0;
     }
 
+    /** Imprime el tamaño actual y si la cola está vacía. */
     private void printStatus() {
         System.out.println("Size: " + queue.size() + " | Empty: " + queue.isEmpty());
     }

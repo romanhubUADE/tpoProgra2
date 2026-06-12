@@ -3,8 +3,14 @@ package treeModule;
 import application.Exercise;
 import java.util.Scanner;
 
+/**
+ * Ejercicio interactivo de agenda de contactos respaldada por un árbol AVL.
+ * Permite agregar, buscar, editar y eliminar contactos; los muestra en orden
+ * alfabético aprovechando el recorrido inorden del árbol.
+ */
 public class ContactsExercise extends Exercise {
 
+    // Constantes que identifican en qué pantalla/paso está el usuario
     private static final int PHASE_MENU        = 0;
     private static final int PHASE_ADD         = 1;
     private static final int PHASE_SEARCH      = 2;
@@ -27,6 +33,7 @@ public class ContactsExercise extends Exercise {
         avl = new SimpleAVL<>();
     }
 
+    /** Despacha la lógica correspondiente a la fase activa del menú. */
     @Override
     protected void exerciseLogic() {
         switch (currentPhase) {
@@ -42,6 +49,7 @@ public class ContactsExercise extends Exercise {
         }
     }
 
+    /** Muestra el menú principal y redirige según la opción elegida. */
     private void menuLogic() {
         if (firstTime) {
             firstTime = false;
@@ -67,6 +75,7 @@ public class ContactsExercise extends Exercise {
         }
     }
 
+    /** Pide nombre, teléfono y email, valida que no exista ya, e inserta en el AVL. */
     private void addLogic() {
         System.out.println("\n-- Add Contact --");
 
@@ -95,6 +104,10 @@ public class ContactsExercise extends Exercise {
         currentPhase = PHASE_MENU;
     }
 
+    /**
+     * Busca un contacto por nombre. Si lo encuentra, guarda la referencia en
+     * {@code selectedContact} y ofrece editar o eliminar.
+     */
     private void searchLogic() {
         System.out.println("\n-- Search Contact --");
 
@@ -130,6 +143,7 @@ public class ContactsExercise extends Exercise {
 
     // ── Edit ──────────────────────────────────────────────────────────────────
 
+    /** Muestra qué campo se quiere editar del contacto seleccionado. */
     private void editMenuLogic() {
         System.out.println("\n-- Edit Contact --");
         System.out.println("Current:\n  " + selectedContact);
@@ -150,6 +164,11 @@ public class ContactsExercise extends Exercise {
         }
     }
 
+    /**
+     * Edita el nombre del contacto seleccionado.
+     * Como el nombre es la clave del árbol, hay que sacar el nodo, cambiarle el nombre
+     * y volver a insertarlo para que quede en la posición correcta.
+     */
     private void editNameLogic() {
         String newName = readNonEmpty("New name (current: " + selectedContact.getName() + ")");
         if (newName == null) { currentPhase = PHASE_EDIT_MENU; return; }
@@ -167,6 +186,7 @@ public class ContactsExercise extends Exercise {
         }
 
         try {
+            // Extrae el nodo para poder cambiar la clave sin romper el orden del árbol
             avl.remove(selectedContact);
             selectedContact.setName(newName);
             avl.insert(selectedContact);
@@ -177,6 +197,7 @@ public class ContactsExercise extends Exercise {
         currentPhase = PHASE_MENU;
     }
 
+    /** Edita el teléfono directamente en el objeto; no requiere reordenar el árbol. */
     private void editPhoneLogic() {
         String newPhone = readNonEmpty("New phone (current: " + selectedContact.getPhone() + ")");
         if (newPhone == null) { currentPhase = PHASE_EDIT_MENU; return; }
@@ -190,6 +211,7 @@ public class ContactsExercise extends Exercise {
         currentPhase = PHASE_MENU;
     }
 
+    /** Edita el email directamente en el objeto; no requiere reordenar el árbol. */
     private void editEmailLogic() {
         String newEmail = readNonEmpty("New email (current: " + selectedContact.getEmail() + ")");
         if (newEmail == null) { currentPhase = PHASE_EDIT_MENU; return; }
@@ -203,6 +225,7 @@ public class ContactsExercise extends Exercise {
         currentPhase = PHASE_MENU;
     }
 
+    /** Pide confirmación antes de eliminar el contacto seleccionado del árbol. */
     private void deleteLogic() {
         System.out.println("\nAre you sure you want to delete \"" + selectedContact.getName() + "\"? (y/n)");
         String confirm = scanner.nextLine().trim().toLowerCase();
@@ -220,6 +243,7 @@ public class ContactsExercise extends Exercise {
         currentPhase = PHASE_MENU;
     }
 
+    /** Lista todos los contactos en orden alfabético usando el recorrido inorden del AVL. */
     private void showAllLogic() {
         if (avl.isEmpty()) {
             System.out.println("\nNo contacts saved.");
@@ -233,6 +257,7 @@ public class ContactsExercise extends Exercise {
         currentPhase = PHASE_MENU;
     }
 
+    /** Carga datos de muestra (plantel campeón del mundo Qatar 2022) para demostración. */
     private void loadSampleData() {
         if (!avl.isEmpty()) {
             System.out.println("\nThere are already " + avl.size() + " contact(s). Clear and reload? (y/n)");
@@ -275,6 +300,10 @@ public class ContactsExercise extends Exercise {
         System.out.println("Sample data loaded. Total contacts: " + avl.size());
     }
 
+    /**
+     * Lee un campo de texto no vacío desde la consola.
+     * Si el usuario escribe "back", devuelve null para cancelar la operación.
+     */
     private String readNonEmpty(String fieldName) {
         while (true) {
             System.out.println(fieldName + " (or 'back' to cancel):");

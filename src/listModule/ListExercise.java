@@ -3,16 +3,25 @@ package listModule;
 import application.Exercise;
 import java.util.Scanner;
 
+/**
+ * Ejercicio interactivo para probar las operaciones de una SimpleList.
+ * El usuario puede agregar, eliminar y limpiar elementos desde la consola.
+ */
 public class ListExercise extends Exercise {
-    private int currentPhase = 0;
+    private int currentPhase = 0; // controla en qué paso del flujo estamos
     private boolean firstTime = true;
     private SimpleList<String> list;
 
+    /** Inicializa el ejercicio con una SimpleArrayList (se puede cambiar por SimpleLinkedList). */
     public ListExercise(Scanner scanner) {
         super(scanner);
         list = new SimpleArrayList<>(); // cambiar por SimpleLinkedList para comparar
     }
 
+    /**
+     * Punto de entrada del bucle del ejercicio.
+     * Delega a la lógica correspondiente según la fase actual.
+     */
     @Override
     protected void exerciseLogic() {
         switch (currentPhase) {
@@ -24,6 +33,7 @@ public class ListExercise extends Exercise {
         }
     }
 
+    /** Muestra el menú principal y lee la opción del usuario. */
     private void menuLogic() {
         if (firstTime) {
             firstTime = false;
@@ -54,6 +64,7 @@ public class ListExercise extends Exercise {
         }
     }
 
+    /** Pide un String al usuario y lo agrega a la lista. Permite agregar varios seguidos. */
     private void addLogic() {
         System.out.println("\nEnter a String to add:");
         String value = scanner.nextLine().trim();
@@ -76,6 +87,7 @@ public class ListExercise extends Exercise {
         }
     }
 
+    /** Pide un índice y elimina el elemento en esa posición. Valida que sea un número válido. */
     private void removeByIndexLogic() {
         if (list.isEmpty()) {
             System.out.println("\nList is empty.");
@@ -104,11 +116,13 @@ public class ListExercise extends Exercise {
                 }
             }
         } catch (NumberFormatException e) {
+            // el usuario ingresó algo que no es un número entero
             System.out.println("Invalid input.");
             currentPhase = 0;
         }
     }
 
+    /** Pide un String y elimina la primera aparición de ese valor en la lista. */
     private void removeByReferenceLogic() {
         if (list.isEmpty()) {
             System.out.println("\nList is empty.");
@@ -133,12 +147,14 @@ public class ListExercise extends Exercise {
         }
     }
 
+    /** Vacía la lista y vuelve al menú. */
     private void clearLogic() {
         list.clear();
         System.out.println("\nList cleared.");
         currentPhase = 0;
     }
 
+    /** Imprime todos los elementos de la lista separados por coma. */
     private void printList() {
         String fullList = "";
         for (int i = 0; i < list.size(); i++) {
@@ -148,6 +164,7 @@ public class ListExercise extends Exercise {
         System.out.println("\nCurrent List: " + fullList);
     }
 
+    /** Muestra el tamaño actual y si la lista está vacía. */
     private void printStatus() {
         System.out.println("Size: " + list.size() + " | Empty: " + list.isEmpty());
     }

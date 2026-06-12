@@ -1,5 +1,9 @@
 package treeModule;
 
+/**
+ * Nodo genérico para los árboles binarios (BST y AVL).
+ * Almacena el valor, los hijos izquierdo y derecho, y la altura del subárbol.
+ */
 class TreeNode<T> {
     T value;
     TreeNode<T> left;

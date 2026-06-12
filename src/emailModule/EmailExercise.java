@@ -3,11 +3,16 @@ package emailModule;
 import application.Exercise;
 import java.util.Scanner;
 
+/**
+ * Ejercicio interactivo del sistema de email. Permite redactar emails, verlos
+ * en el inbox, clasificarlos en pestañas y leerlos desde ahí.
+ * Usa una máquina de estados (currentPhase) para navegar entre pantallas.
+ */
 public class EmailExercise extends Exercise {
     private int currentPhase = 0;
     private boolean firstTime = true;
     private final EmailSystem system;
-    private Tab selectedTab;
+    private Tab selectedTab; // pestaña seleccionada actualmente por el usuario
 
     public EmailExercise(Scanner scanner) {
         super(scanner);
@@ -15,6 +20,10 @@ public class EmailExercise extends Exercise {
         selectedTab = null;
     }
 
+    /**
+     * Método principal del ejercicio. Se llama en cada iteración del loop
+     * y delega en el método correspondiente a la fase actual.
+     */
     @Override
     protected void exerciseLogic() {
         switch (currentPhase) {
@@ -28,6 +37,7 @@ public class EmailExercise extends Exercise {
         }
     }
 
+    /** Muestra el menú principal y procesa la opción elegida. */
     private void menuLogic() {
         if (firstTime) {
             firstTime = false;
@@ -56,6 +66,7 @@ public class EmailExercise extends Exercise {
         }
     }
 
+    /** Pide asunto y prioridad, crea el email y lo agrega al inbox. */
     private void composeLogic() {
         System.out.println("\nEnter subject:");
         String subject = scanner.nextLine().trim();
@@ -85,6 +96,7 @@ public class EmailExercise extends Exercise {
         }
     }
 
+    /** Muestra los emails del inbox. Si está vacío, vuelve al menú. */
     private void inboxLogic() {
         System.out.println("\n=== INBOX ===");
         if (system.isInboxEmpty()) {
@@ -110,6 +122,7 @@ public class EmailExercise extends Exercise {
         }
     }
 
+    /** Pide al usuario elegir una pestaña y mueve el email top del inbox ahí. */
     private void classifyLogic() {
         System.out.println("\nMove highest priority email to which tab?"
             + "\nprincipal - Principal"
@@ -118,6 +131,7 @@ public class EmailExercise extends Exercise {
         );
         Tab tab = readTab();
         if (tab == null) {
+            // El usuario eligió "back"
             currentPhase = 2;
             return;
         }
@@ -126,6 +140,7 @@ public class EmailExercise extends Exercise {
         currentPhase = 2;
     }
 
+    /** Muestra el menú de pestañas y permite seleccionar una para ver su contenido. */
     private void tabsMenuLogic() {
         System.out.println("\nChoose a tab to open:"
             + "\nprincipal - Principal       (" + system.tabSize(Tab.PRINCIPAL) + " mail(s))"
@@ -146,6 +161,7 @@ public class EmailExercise extends Exercise {
         }
     }
 
+    /** Muestra los emails de la pestaña seleccionada. Si está vacía, vuelve al menú de pestañas. */
     private void viewTabLogic() {
         System.out.println("\n=== " + selectedTab.getDisplayName().toUpperCase() + " ===");
         if (system.isTabEmpty(selectedTab)) {
@@ -171,6 +187,7 @@ public class EmailExercise extends Exercise {
         }
     }
 
+    /** Lee (y elimina) el email de mayor prioridad de la pestaña seleccionada. */
     private void readTopTabLogic() {
         Email email = system.readTopEmail(selectedTab);
         System.out.println("\n=== READING ===");
@@ -181,6 +198,7 @@ public class EmailExercise extends Exercise {
         currentPhase = 5;
     }
 
+    /** Pide al usuario que elija ALTO o BAJO hasta que ingrese una opción válida. */
     private Priority readPriority() {
         while (true) {
             System.out.println("Choose priority:"
@@ -197,6 +215,9 @@ public class EmailExercise extends Exercise {
         }
     }
 
+    /**
+     * Pide al usuario que elija una pestaña. Devuelve null si el usuario ingresa "back".
+     */
     private Tab readTab() {
         while (true) {
             String input = scanner.nextLine().toLowerCase();
@@ -211,6 +232,7 @@ public class EmailExercise extends Exercise {
         }
     }
 
+    /** Imprime la lista de emails numerada con su prioridad y asunto. */
     private void printEmails(Email[] emails) {
         for (int i = 0; i < emails.length; i++) {
             Email e = emails[i];
@@ -218,6 +240,7 @@ public class EmailExercise extends Exercise {
         }
     }
 
+    /** Muestra un resumen del estado actual: cuántos emails hay en cada cola. */
     private void printStatus() {
         System.out.println("Inbox: " + system.inboxSize()
             + " | Principal: " + system.tabSize(Tab.PRINCIPAL)
